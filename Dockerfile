@@ -1,19 +1,17 @@
-# Development
-FROM node:18.15.0-slim as dev
+FROM node:18.15.0-slim
 LABEL MAINTAINER="Jacopo Costantini <jacopocostantini32@gmail.com>"
 
-# Copy the project files to the container
-ADD . /app
+# Working directory
+WORKDIR /usr/src/app
 
-# Set the working directory
-WORKDIR /app
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-# Install express, mongoose, typescript and nodemon
-RUN npm i
+# Copy source code
+COPY . .
 
-# Production
-FROM dev as prod
+# Install dependencies
+RUN npm install
 
-ENV NODE_PATH=./build
-
-RUN npm run build
+# Start the server using nodemon
+CMD [ "npm", "run", "dev" ]
