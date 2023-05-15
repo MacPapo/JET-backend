@@ -1,11 +1,15 @@
-import express from 'express';
+const express = require('express');
 import { Request, Response } from 'express';
 
 const app = express();
 const port = 4000;
 
+app.use(express.json({ extended: true }));
+app.use('/api/users', require('./api/user.api'));
+
 app.get('/api', (req: Request, res: Response) => {
-    res.send('Hello TypeScript and Node.js!');
+    console.log(req.body);
+    res.send('The sedulous hyena ate the antelope!');
 });
 
 app.listen(port, () => {
