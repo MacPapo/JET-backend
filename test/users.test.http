@@ -7,3 +7,14 @@ Content-Type: application/json
 "name": "papo",
 "email": "tomare"
 }
+
+# new waiter
+#
+POST http://localhost:8080/api/waiters
+Content-Type: application/json
+
+{
+"first_name": "papo",
+"last_name": "tomare",
+"email": "tomareomo"
+}
