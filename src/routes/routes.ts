@@ -1,25 +1,16 @@
 import { Router } from "express";
-import UserController from "../controllers/user/user.controller";
+import waitersRouter from "./waiter.routes";
 
 const router: Router = Router();
+
+//MAIN ROUTES
 
 router.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-// GET /api/users
-router.get("/users", UserController.getAllUsers);
+//MODEL ROUTES
 
-// GET /api/users/:id
-router.get("/users/:id", UserController.getUserById);
-
-// POST /api/users
-router.post("/users", UserController.createUser);
-
-// PUT /api/users/:id
-router.put("/users/:id", UserController.updateUser);
-
-// DELETE /api/users/:id
-router.delete("/users/:id", UserController.deleteUser);
+router.use("/waiters", waitersRouter);
 
 export default router;
