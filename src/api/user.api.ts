@@ -1,7 +1,6 @@
-const express = require('express');
-import { Request, Response } from 'express';
-const router = express.Router();
-const UserController = require('../models/user/user.model');
+import { Request, Response, Router } from 'express';
+import userController from '../controller/user/user.controller';
+const router = Router();
 
 router.post('/', (req: Request, res: Response) => {
     console.log(req.body);
@@ -10,11 +9,11 @@ router.post('/', (req: Request, res: Response) => {
 
 router.get('/', async (req: Request, res: Response) => {
     try {
-        const users = await UserController.getUsers();
+        const users = userController.getAllUsers(req, res);
         res.json(users);
     } catch (err) {
         res.json({ message: err });
     }
 });
 
-module.exports = router;
+export default router;
