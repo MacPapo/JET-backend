@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import mongooseService from "../common/services/mongoose.service";
+import mongooseService from "../common/config/mongoose.config";
 
 const CookerSchema: Schema = new Schema({
   first_name: { type: String, required: true },
