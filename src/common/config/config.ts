@@ -12,4 +12,6 @@ export const config = {
     apiDbName: process.env.API_DB_NAME,
     dbTestName: process.env.DB_TEST_NAME,
     dbProdName: process.env.DB_PROD_NAME,
+    redisHost: process.env.REDIS_HOST,
+    redisPort: process.env.REDIS_PORT,
 };
