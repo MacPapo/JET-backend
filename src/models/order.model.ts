@@ -1,8 +1,9 @@
 import { Schema } from "mongoose";
 import mongooseService from "../common/config/mongoose.config";
 import OrderStatus from "../common/utils/order_status";
+import { IOrder } from "./interfaces/order.interface";
 
-const OrderSchema: Schema = new Schema({
+const OrderSchema: Schema<IOrder> = new Schema({
     table: { type: Schema.Types.ObjectId, ref: "Table" },
     waiter: { type: Schema.Types.ObjectId, ref: "Waiter" },
     foods: [
