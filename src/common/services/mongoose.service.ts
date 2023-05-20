@@ -1,9 +1,9 @@
-import { config } from './config';
 import mongoose from 'mongoose';
+import { MONGODB_URI } from '../config/config';
 
 class MongooseService {
     private count = 0;
-    private uri: string = `mongodb://${config.dbHost}:${config.dbPort}/${config.apiDbName}`;
+    private uri: string = MONGODB_URI;
     // private mongooseOptions = {
     //     useNewUrlParser: true,
     //     useUnifiedTopology: true,
