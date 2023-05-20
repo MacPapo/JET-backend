@@ -1,8 +1,9 @@
 import { Schema } from "mongoose";
 import mongooseService from "../common/services/mongoose.service";
+import { IProduct } from "./interfaces/product.interface";
 
-const FoodSchema: Schema = new Schema({
-    name: { type: String, required: true },
+const FoodSchema: Schema<IProduct> = new Schema({
+    name: { type: String, required: true, unique: true },
     price: { type: Number, required: true },
     description: { type: String, required: true },
     productionTime: { type: Number, required: true },

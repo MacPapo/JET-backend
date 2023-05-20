@@ -1,10 +1,11 @@
 import { Schema } from "mongoose";
 import mongooseService from "../common/services/mongoose.service";
+import { IUser } from "./interfaces/user.interface";
 
-const CookerSchema: Schema = new Schema({
-  first_name: { type: String, required: true },
-  last_name: { type: String, required: true },
-  email: { type: String, required: true },
+const CookerSchema: Schema<IUser> = new Schema({
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
 });
 
 const Cooker = mongooseService.getMongoose().model("Cooker", CookerSchema);

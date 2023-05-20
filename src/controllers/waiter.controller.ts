@@ -30,13 +30,13 @@ class WaiterController {
 
     createWaiter(req: Request, res: Response): void {
         const body = req.body;
-        const first_name = body.first_name;
-        const last_name = body.last_name;
+        const firstName = body.firstName;
+        const lastName = body.lastName;
         const email = body.email;
 
         const newWaiter = new Waiter({
-            first_name,
-            last_name,
+            firstName,
+            lastName,
             email,
         });
 
@@ -53,11 +53,11 @@ class WaiterController {
     updateWaiter(req: Request, res: Response): void {
         const waiterId = req.params.id;
         const body = req.body;
-        const first_name = body.first_name;
-        const last_name = body.last_name;
+        const firstName = body.firstName;
+        const lastName = body.lastName;
         const email = body.email;
 
-        Waiter.findByIdAndUpdate(waiterId, { first_name, last_name, email }, { new: true })
+        Waiter.findByIdAndUpdate(waiterId, { firstName, lastName, email }, { new: true })
             .then((waiter) => {
                 if (!waiter) {
                     res.status(404).json({ error: "Waiter not found" });
