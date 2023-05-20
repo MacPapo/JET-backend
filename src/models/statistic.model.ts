@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import mongooseService from "../common/config/mongoose.config";
+import mongooseService from "../common/services/mongoose.service";
 import { IStatistic } from "./interfaces/statistic.interface";
 
 const StatisticSchema: Schema<IStatistic> = new Schema({

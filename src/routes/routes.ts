@@ -1,5 +1,5 @@
 import { Router } from "express";
-import redisClient from "../common/config/redis.config";
+import redisService from "../common/services/redis.service";
 
 import waitersRouter from "./waiter.routes";
 import cashierRouter from "./cashier.routes";
@@ -20,8 +20,8 @@ router.get("/", (req, res) => {
 });
 
 router.get("/redis_test", (req, res) => {
-    redisClient.set('key', 'funziona');
-    const value = redisClient.get('key');
+    redisService.set('key', 'funziona');
+    const value = redisService.get('key');
     value.then((value: string) => {
         res.send(`Redis test: ${value}`);
     }).catch((err: Error) => {

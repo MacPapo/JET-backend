@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import mongooseService from "../common/config/mongoose.config";
+import mongooseService from "../common/services/mongoose.service";
 import { IUser } from "./interfaces/user.interface";
 
 const WaiterSchema: Schema<IUser> = new Schema({

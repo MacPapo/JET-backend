@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import mongooseService from "../common/config/mongoose.config";
+import mongooseService from "../common/services/mongoose.service";
 import { ITable } from "./interfaces/table.interface";
 
 const TableSchema: Schema<ITable> = new Schema({
