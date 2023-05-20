@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
+import { MONGODB_URI } from '../config/config';
 
 class MongooseService {
     private count = 0;
+    private uri: string = MONGODB_URI;
     // private mongooseOptions = {
     //     useNewUrlParser: true,
     //     useUnifiedTopology: true,
@@ -20,7 +22,7 @@ class MongooseService {
     connectWithRetry = () => {
         console.log('Attempting MongoDB connection (will retry if needed)');
         mongoose
-            .connect('mongodb://db:27017/api-db')
+            .connect(this.uri)
             // , this.mongooseOptions as any)
             .then(() => {
                 console.log('MongoDB is connected');
