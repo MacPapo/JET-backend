@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Cashier from "../models/cashier.model";
+import StatusCode from "../common/utils/status_code";
 
 class CashierController {
     getAllCashiers(req: Request, res: Response): void {
@@ -8,7 +9,7 @@ class CashierController {
                 res.json(cashiers);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -18,13 +19,13 @@ class CashierController {
         Cashier.findById(cashierId)
             .then((cashier) => {
                 if (!cashier) {
-                    res.status(404).json({ error: "Cashier not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Cashier not found" });
                 } else {
                     res.json(cashier);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -45,10 +46,10 @@ class CashierController {
         newCashier
             .save()
             .then((cashier) => {
-                res.status(201).json(cashier);
+                res.status(StatusCode.CREATED).json(cashier);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -63,13 +64,13 @@ class CashierController {
         Cashier.findByIdAndUpdate(cashierId, { firstName, lastName, email, admin }, { new: true })
             .then((cashier) => {
                 if (!cashier) {
-                    res.status(404).json({ error: "Cashier not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Cashier not found" });
                 } else {
                     res.json(cashier);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -79,13 +80,13 @@ class CashierController {
         Cashier.findByIdAndDelete(cashierId)
             .then((cashier) => {
                 if (!cashier) {
-                    res.status(404).json({ error: "Cashier not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Cashier not found" });
                 } else {
-                    res.sendStatus(204);
+                    res.sendStatus(StatusCode.NO_CONTENT);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 }

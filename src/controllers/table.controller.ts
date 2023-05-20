@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Table from "../models/table.model";
+import StatusCode from "../common/utils/status_code";
 
 class TableController {
     getAllTables(req: Request, res: Response): void {
@@ -8,7 +9,7 @@ class TableController {
                 res.json(tables);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -18,13 +19,13 @@ class TableController {
         Table.findById(tableId)
             .then((table) => {
                 if (!table) {
-                    res.status(404).json({ error: "Table not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Table not found" });
                 } else {
                     res.json(table);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -43,10 +44,10 @@ class TableController {
         newTable
             .save()
             .then((table) => {
-                res.status(201).json(table);
+                res.status(StatusCode.CREATED).json(table);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -60,13 +61,13 @@ class TableController {
         Table.findByIdAndUpdate(tableId, { tableNumber, seats, isAvailable }, { new: true })
             .then((table) => {
                 if (!table) {
-                    res.status(404).json({ error: "Table not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Table not found" });
                 } else {
                     res.json(table);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -76,13 +77,13 @@ class TableController {
         Table.findByIdAndDelete(tableId)
             .then((table) => {
                 if (!table) {
-                    res.status(404).json({ error: "Table not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Table not found" });
                 } else {
-                    res.sendStatus(204);
+                    res.sendStatus(StatusCode.NO_CONTENT);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 }
