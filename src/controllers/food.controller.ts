@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Food from "../models/food.model";
+import StatusCode from "../common/utils/status_code";
 
 class FoodController {
     getAllFoods(req: Request, res: Response): void {
@@ -8,7 +9,7 @@ class FoodController {
                 res.json(foods);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -18,13 +19,13 @@ class FoodController {
         Food.findById(foodId)
             .then((food) => {
                 if (!food) {
-                    res.status(404).json({ error: "Food not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Food not found" });
                 } else {
                     res.json(food);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -45,10 +46,10 @@ class FoodController {
         newFood
             .save()
             .then((food) => {
-                res.status(201).json(food);
+                res.status(StatusCode.CREATED).json(food);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -63,13 +64,13 @@ class FoodController {
         Food.findByIdAndUpdate(foodId, { name, price, description, productionTime }, { new: true })
             .then((food) => {
                 if (!food) {
-                    res.status(404).json({ error: "Food not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Food not found" });
                 } else {
                     res.json(food);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -79,13 +80,13 @@ class FoodController {
         Food.findByIdAndDelete(foodId)
             .then((food) => {
                 if (!food) {
-                    res.status(404).json({ error: "Food not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Food not found" });
                 } else {
-                    res.sendStatus(204);
+                    res.sendStatus(StatusCode.NO_CONTENT);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 }

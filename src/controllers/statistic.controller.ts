@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Statistic from "../models/statistic.model";
+import StatusCode from "../common/utils/status_code";
 
 class StatisticController {
     getAllStatistics(req: Request, res: Response): void {
@@ -8,7 +9,7 @@ class StatisticController {
                 res.json(statistics);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -18,13 +19,13 @@ class StatisticController {
         Statistic.findById(statisticId)
             .then((statistic) => {
                 if (!statistic) {
-                    res.status(404).json({ error: "Statistic not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Statistic not found" });
                 } else {
                     res.json(statistic);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -41,10 +42,10 @@ class StatisticController {
         newStatistic
             .save()
             .then((statistic) => {
-                res.status(201).json(statistic);
+                res.status(StatusCode.CREATED).json(statistic);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -57,13 +58,13 @@ class StatisticController {
         Statistic.findByIdAndUpdate(statisticId, { day, dishOfTheDay }, { new: true })
             .then((statistic) => {
                 if (!statistic) {
-                    res.status(404).json({ error: "Statistic not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Statistic not found" });
                 } else {
                     res.json(statistic);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -73,13 +74,13 @@ class StatisticController {
         Statistic.findByIdAndDelete(statisticId)
             .then((statistic) => {
                 if (!statistic) {
-                    res.status(404).json({ error: "Statistic not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Statistic not found" });
                 } else {
-                    res.sendStatus(204);
+                    res.sendStatus(StatusCode.NO_CONTENT);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 }

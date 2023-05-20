@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Order from "../models/order.model";
+import StatusCode from "../common/utils/status_code";
 
 class OrderController {
     getAllOrders(req: Request, res: Response): void {
@@ -8,7 +9,7 @@ class OrderController {
                 res.json(orders);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -18,13 +19,13 @@ class OrderController {
         Order.findById(orderId)
             .then((order) => {
                 if (!order) {
-                    res.status(404).json({ error: "Order not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Order not found" });
                 } else {
                     res.json(order);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -47,10 +48,10 @@ class OrderController {
         newOrder
             .save()
             .then((order) => {
-                res.status(201).json(order);
+                res.status(StatusCode.CREATED).json(order);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -66,13 +67,13 @@ class OrderController {
         Order.findByIdAndUpdate(orderId, { table, waiter, foods, drinks, status }, { new: true })
             .then((order) => {
                 if (!order) {
-                    res.status(404).json({ error: "Order not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Order not found" });
                 } else {
                     res.json(order);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -82,13 +83,13 @@ class OrderController {
         Order.findByIdAndDelete(orderId)
             .then((order) => {
                 if (!order) {
-                    res.status(404).json({ error: "Order not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Order not found" });
                 } else {
-                    res.sendStatus(204);
+                    res.sendStatus(StatusCode.NO_CONTENT);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 }

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Cooker from "../models/cooker.model";
+import StatusCode from "../common/utils/status_code";
 
 class CookerController {
     getAllCookers(req: Request, res: Response): void {
@@ -8,7 +9,7 @@ class CookerController {
                 res.json(cookers);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -18,13 +19,13 @@ class CookerController {
         Cooker.findById(cookerId)
             .then((cooker) => {
                 if (!cooker) {
-                    res.status(404).json({ error: "Cooker not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Cooker not found" });
                 } else {
                     res.json(cooker);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -43,10 +44,10 @@ class CookerController {
         newCooker
             .save()
             .then((cooker) => {
-                res.status(201).json(cooker);
+                res.status(StatusCode.CREATED).json(cooker);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -60,13 +61,13 @@ class CookerController {
         Cooker.findByIdAndUpdate(cookerId, { firstName, lastName, email }, { new: true })
             .then((cooker) => {
                 if (!cooker) {
-                    res.status(404).json({ error: "Cooker not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Cooker not found" });
                 } else {
                     res.json(cooker);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -76,13 +77,13 @@ class CookerController {
         Cooker.findByIdAndDelete(cookerId)
             .then((cooker) => {
                 if (!cooker) {
-                    res.status(404).json({ error: "Cooker not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Cooker not found" });
                 } else {
-                    res.sendStatus(204);
+                    res.sendStatus(StatusCode.NO_CONTENT);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 }

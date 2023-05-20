@@ -16,7 +16,13 @@ class RedisService {
         this.client.on('connect', () => {
             console.log('Redis is connected');
         });
-        this.client.connect();
+        this.client.connect()
+            .then(() => {
+                console.log('Redis is connected');
+            })
+            .catch((err: any) => {
+                console.log('Error ' + err);
+            });
     }
 
     public static getInstance(): RedisService {
