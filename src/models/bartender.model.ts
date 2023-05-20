@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import mongooseService from "../common/config/mongoose.config";
+import mongooseService from "../common/services/mongoose.service";
 
 const BartenderSchema: Schema = new Schema({
     first_name: { type: String, required: true },
