@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Waiter from "../models/waiter.model";
+import StatusCode from "../common/utils/status_code";
 
 class WaiterController {
     getAllWaiters(req: Request, res: Response): void {
@@ -8,7 +9,7 @@ class WaiterController {
                 res.json(waiters);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -18,13 +19,13 @@ class WaiterController {
         Waiter.findById(waiterId)
             .then((waiter) => {
                 if (!waiter) {
-                    res.status(404).json({ error: "Waiter not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Waiter not found" });
                 } else {
                     res.json(waiter);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -43,10 +44,10 @@ class WaiterController {
         newWaiter
             .save()
             .then((waiter) => {
-                res.status(201).json(waiter);
+                res.status(StatusCode.CREATED).json(waiter);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -60,13 +61,13 @@ class WaiterController {
         Waiter.findByIdAndUpdate(waiterId, { firstName, lastName, email }, { new: true })
             .then((waiter) => {
                 if (!waiter) {
-                    res.status(404).json({ error: "Waiter not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Waiter not found" });
                 } else {
                     res.json(waiter);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -76,13 +77,13 @@ class WaiterController {
         Waiter.findByIdAndDelete(waiterId)
             .then((waiter) => {
                 if (!waiter) {
-                    res.status(404).json({ error: "Waiter not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Waiter not found" });
                 } else {
-                    res.sendStatus(204);
+                    res.sendStatus(StatusCode.NO_CONTENT);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 }

@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { MONGODB_URI } from '../config/config';
 
 class MongooseService {
+    private static instance: MongooseService;
     private count = 0;
     private uri: string = MONGODB_URI;
     // private mongooseOptions = {
@@ -11,8 +12,15 @@ class MongooseService {
     //     useFindAndModify: false,
     // };
 
-    constructor() {
+    private constructor() {
         this.connectWithRetry();
+    }
+
+    public static getInstance() {
+        if (!MongooseService.instance) {
+            MongooseService.instance = new MongooseService();
+        }
+        return MongooseService.instance;
     }
 
     getMongoose() {
@@ -39,4 +47,4 @@ class MongooseService {
     };
 }
 
-export default new MongooseService();
+export default MongooseService.getInstance();

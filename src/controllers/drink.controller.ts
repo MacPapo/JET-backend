@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Drink from "../models/drink.model";
+import StatusCode from "../common/utils/status_code";
 
 class DrinkController {
     getAllDrinks(req: Request, res: Response): void {
@@ -8,7 +9,7 @@ class DrinkController {
                 res.json(drinks);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -18,13 +19,13 @@ class DrinkController {
         Drink.findById(drinkId)
             .then((drink) => {
                 if (!drink) {
-                    res.status(404).json({ error: "Drink not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Drink not found" });
                 } else {
                     res.json(drink);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -45,10 +46,10 @@ class DrinkController {
         newDrink
             .save()
             .then((drink) => {
-                res.status(201).json(drink);
+                res.status(StatusCode.CREATED).json(drink);
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -63,13 +64,13 @@ class DrinkController {
         Drink.findByIdAndUpdate(drinkId, { name, price, description, productionTime }, { new: true })
             .then((drink) => {
                 if (!drink) {
-                    res.status(404).json({ error: "Drink not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Drink not found" });
                 } else {
                     res.json(drink);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 
@@ -79,13 +80,13 @@ class DrinkController {
         Drink.findByIdAndDelete(drinkId)
             .then((drink) => {
                 if (!drink) {
-                    res.status(404).json({ error: "Drink not found" });
+                    res.status(StatusCode.NOT_FOUND).json({ error: "Drink not found" });
                 } else {
-                    res.sendStatus(204);
+                    res.sendStatus(StatusCode.NO_CONTENT);
                 }
             })
             .catch((err) => {
-                res.status(500).json({ error: err.message });
+                res.status(StatusCode.SERVER_ERROR).json({ error: err.message });
             });
     }
 }

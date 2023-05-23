@@ -2,7 +2,17 @@ import { JWTVerifyResult, JWTPayload, SignJWT, jwtVerify } from 'jose';
 import { JWT_SECRET } from '../config/config';
 
 class JwtService {
+    private static instance: JwtService;
     private secretKey = new TextEncoder().encode(JWT_SECRET);
+
+    private constructor() {}
+
+    public static getInstance(): JwtService {
+        if (!JwtService.instance) {
+            JwtService.instance = new JwtService();
+        }
+        return JwtService.instance;
+    }
 
     async generateToken(payload: JWTPayload): Promise<string> {
         const token = await new SignJWT(payload)
@@ -21,4 +31,4 @@ class JwtService {
     }
 }
 
-export default new JwtService();
+export default JwtService.getInstance();
