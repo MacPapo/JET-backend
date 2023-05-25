@@ -6,12 +6,12 @@ const auth_router = Router();
 
 auth_router.post('/login', async (req: Request, res: Response) => {
   // Assuming you have a user authentication mechanism
-  const { user, password } = req.body;
+  const { email, password } = req.body;
 
   // Validate the user and password
-  if (user === 'example' && password === 'password') {
+  if (email === 'example@gmail.com' && password === 'password') {
     // Generate a token
-    const token = await jwtService.generateToken({ user });
+    const token = await jwtService.generateToken({ email });
 
     // Return the token to the client
     res.json({ token });
