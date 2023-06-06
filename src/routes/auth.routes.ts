@@ -12,9 +12,11 @@ auth_router.post('/login', async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         const { user, category } = await MongoQueryService.findUserByEmail(email);
-        
+
         if (user != null && category != null) {
-            
+            const userEmail = user.email;
+            console.log(userEmail);
+
             // Validate the user and password
             await HashHandler.verify(user.password, password)
                 .then(async (match) => {
@@ -27,25 +29,25 @@ auth_router.post('/login', async (req: Request, res: Response) => {
                         RedisManager.expire('user', 60 * 15);
 
                         // Return the token to the client
-                        return res.status(StatusCode.SUCCESS).json({ token });
+                        return res.status(StatusCode.SUCCESS).json({ token, userEmail, category });
                     } else {
                         return res.status(StatusCode.AUTH_ERROR).json({ message: 'Invalid credentials' });
                     }
                 })
                 .catch((error) => {
-                    return res.status(StatusCode.SERVER_ERROR).json({ message: 'Internal Error XD' });
+                    return res.status(StatusCode.SERVER_ERROR).json({ message: 'Internal Error' });
                 });
         } else {
             return res.status(StatusCode.AUTH_ERROR).json({ message: 'Invalid credentials' });
         }
     } catch (error) {
-        return res.status(StatusCode.SERVER_ERROR).json({ message: 'Internal Error XD' });
+        return res.status(StatusCode.SERVER_ERROR).json({ message: 'Internal Error' });
     }
 });
 
 auth_router.post('/register', async (req: Request, res: Response) => {
-    const { firstName, lastName, email, password, userCategory } = req.body;
-    const { user, category } = await MongoQueryService.findUserByEmail(email);
+    const { firstName, lastName, email, password, category } = req.body;
+    const { user } = await MongoQueryService.findUserByEmail(email);
 
     if (user != null && user.email == email) {
         return res.status(StatusCode.AUTH_ERROR).json({ message: 'Email already exists' });
@@ -59,7 +61,7 @@ auth_router.post('/register', async (req: Request, res: Response) => {
                 lastName,
                 email,
                 password: hash,
-                category: userCategory
+                category
             }
 
             const registeredUser = await MongoQueryService.registerUser(newUser);
