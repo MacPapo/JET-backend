@@ -1,9 +1,10 @@
-import { Request, Response, Router } from "express";
+import { Request, Response, NextFunction, Router } from "express";
 import { HashHandler } from '../common/utils/hash.handler';
 import MongoQueryService from "../services/mongo.service";
 import jwtService from '../common/services/jwt.service';
 import StatusCode from "../common/utils/status_code";
 import RedisManager from "../common/services/redis.service";
+import createError from 'http-errors';
 
 const auth_router = Router();
 
@@ -45,35 +46,46 @@ auth_router.post('/login', async (req: Request, res: Response) => {
     }
 });
 
-auth_router.post('/register', async (req: Request, res: Response) => {
+auth_router.post('/register', async (req: Request, res: Response, next: NextFunction) => {
     const { firstName, lastName, email, password, category } = req.body;
-    const { user } = await MongoQueryService.findUserByEmail(email);
+    
+    try {
+        if (!firstName ||
+            !lastName  ||
+            !email     ||
+            !password  ||
+            !category) throw createError.BadRequest();
+        
+        if (await MongoQueryService.isEmailActive(email))
+            throw createError.Conflict(`$(email) is already in use`); 
 
-    if (user != null && user.email == email) {
-        return res.status(StatusCode.AUTH_ERROR).json({ message: 'Email already exists' });
+        // Encrypt the password
+        await HashHandler.encrypt(password)
+            .then(async (hash) => {
+                const newUser = {
+                    firstName,
+                    lastName,
+                    email,
+                    password: hash,
+                    category
+                }
+
+                await MongoQueryService.registerUser(newUser)
+                    .then((valid: Boolean) => {
+                        res.send(valid);
+                    })
+                    .catch((err: Error) => {
+                        next(err);
+                    })
+
+            })
+            .catch((error) => {
+                return res.status(StatusCode.SERVER_ERROR).json({ message: 'Encryption failed' });
+            });
+        
+    } catch (error) {
+        next(error);
     }
-
-    // Encrypt the password
-    await HashHandler.encrypt(password)
-        .then(async (hash) => {
-            const newUser = {
-                firstName,
-                lastName,
-                email,
-                password: hash,
-                category
-            }
-
-            const registeredUser = await MongoQueryService.registerUser(newUser);
-            if (registeredUser != null) {
-                return res.status(StatusCode.AUTH_ERROR).json({ message: 'Registration failed' });
-            } else {
-                return res.status(StatusCode.CREATED).json({ message: 'Registration successful' });
-            }
-        })
-        .catch((error) => {
-            return res.status(StatusCode.SERVER_ERROR).json({ message: 'Encryption failed' });
-        });
 });
 
 export default auth_router;

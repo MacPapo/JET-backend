@@ -1,8 +1,14 @@
 import mongooseService from "../common/services/mongoose.service";
-import Waiter from "../models/waiter.model";
-import Cashier from "../models/cashier.model";
-import Bartender from "../models/bartender.model";
-import Cooker from "../models/cooker.model";
+
+import WaiterSchema from "../models/waiter.model";
+import BartenderSchema from "../models/bartender.model";
+import CashierSchema from "../models/cashier.model";
+import CookerSchema from "../models/cooker.model";
+
+import { Waiter } from "../models/interfaces/waiter.interface";
+import { Bartender } from "../models/interfaces/bartender.interface";
+import { Cashier } from "../models/interfaces/cashier.interface";
+import { Cooker } from "../models/interfaces/cooker.interface";
 
 const db = mongooseService.getMongoose();
 
@@ -12,120 +18,138 @@ class MongoQueryService {
         let user = null;
         let category = null;
 
-        const waiter = await Waiter.findOne({ email });
+        const waiter = await WaiterSchema.findOne({ email });
         if (waiter) {
             user = waiter;
             category = 'Waiter';
-            return { user, category };
         }
 
-        const bartender = await Bartender.findOne({ email });
+        const bartender = await BartenderSchema.findOne({ email });
         if (bartender) {
             user = bartender;
             category = 'Bartender';
-            return { user, category };
         }
 
-        const cashier = await Cashier.findOne({ email });
+        const cashier = await CashierSchema.findOne({ email });
         if (cashier) {
             user = cashier;
             category = 'Cashier';
-            return { user, category };
         }
 
-        const cooker = await Cooker.findOne({ email });
+        const cooker = await CookerSchema.findOne({ email });
         if (cooker) {
             user = cooker;
             category = 'Cooker';
-            return { user, category };
         }
 
         return { user, category };
     }
 
+    public static async isEmailActive(email: string) {
+
+        const waiter    = await WaiterSchema.findOne({ email });
+        const bartender = await BartenderSchema.findOne({ email });
+        const cashier   = await CashierSchema.findOne({ email });
+        const cooker    = await CookerSchema.findOne({ email });
+        
+        if (waiter    ||
+            bartender ||
+            cashier   ||
+            cooker)
+            return true;
+        return false;
+    }
+
     public static async registerUser(user: {
         firstName: string;
-        lastName: string;
-        email: string;
-        password: string;
-        category: string;
-    }) {
-        let registeredUser = null;
+        lastName:  string;
+        email:     string;
+        password:  string;
+        category:  string;
+    }): Promise<Boolean> {
 
-        console.log(user);
-
+        let res: Boolean = false;
         switch (user.category) {
             case 'Waiter': {
-                const waiter = new Waiter({
+                const waiter = new WaiterSchema({
                     firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    password: user.password,
+                    lastName:  user.lastName,
+                    email:     user.email,
+                    password:  user.password,
                 });
-                const savedWaiter = await waiter.save()
-                    .then((savedWaiter) => {
-                        return savedWaiter;
+
+                await waiter.save()
+                    .then((waiter: Waiter) => {
+                        res = true;
                     })
-                    .catch((err) => {
+                    .catch((err: Error) => {
                         console.log(err.message);
                     });
                 break;
             }
+                
             case 'Bartender': {
-                const bartender = new Bartender({
+                const bartender = new BartenderSchema({
                     firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    password: user.password,
+                    lastName:  user.lastName,
+                    email:     user.email,
+                    password:  user.password,
                 });
-                const savedBartender = await bartender.save()
-                    .then((savedBartender) => {
-                        return savedBartender;
+                
+                await bartender.save()
+                    .then((bartender: Bartender) => {
+                        res = true;
                     })
-                    .catch((err) => {
+                    .catch((err: Error) => {
                         console.log(err.message);
                     });
                 break;
             }
+                
             case 'Cashier': {
-                const cashier = new Cashier({
+                const cashier = new CashierSchema({
                     firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    password: user.password,
+                    lastName:  user.lastName,
+                    email:     user.email,
+                    password:  user.password,
+                    // TODO: add Admin 
                 });
-                const savedCashier = await cashier.save()
-                    .then((savedCashier) => {
-                        return savedCashier;
+                
+                await cashier.save()
+                    .then((cashier: Cashier) => {
+                        res = true;
                     })
-                    .catch((err) => {
+                    .catch((err: Error) => {
                         console.log(err.message);
                     });
                 break;
             }
+                
             case 'Cooker': {
-                const cooker = new Cooker({
+                const cooker = new CookerSchema({
                     firstName: user.firstName,
                     lastName: user.lastName,
                     email: user.email,
                     password: user.password,
                 });
-                const savedCooker = await cooker.save()
-                    .then((savedCooker) => {
-                        return savedCooker;
+                
+                await cooker.save()
+                    .then((cooker: Cooker) => {
+                        res = true;
                     })
-                    .catch((err) => {
+                    .catch((err: Error) => {
                         console.log(err.message);
                     });
                 break;
             }
+                
             default: {
                 // Handle default case or error condition
+                res = true;
                 break;
             }
         }
-
-        return registeredUser;
+        return res;
     }
 }
 
