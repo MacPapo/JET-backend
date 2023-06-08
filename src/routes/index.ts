@@ -2,7 +2,7 @@ import express from 'express';
 import apikey from '../auth/apikey';
 import permission from '../helpers/permission';
 import { Permission } from '../database/model/ApiKey';
-import signup from './access/signup';
+import register from './access/register';
 import login from './access/login';
 import logout from './access/logout';
 import token from './access/token';
@@ -19,7 +19,7 @@ router.use(apikey);
 /*---------------------------------------------------------*/
 router.use(permission(Permission.GENERAL));
 /*---------------------------------------------------------*/
-router.use('/signup', signup);
+router.use('/register', register);
 router.use('/login', login);
 router.use('/logout', logout);
 router.use('/token', token);

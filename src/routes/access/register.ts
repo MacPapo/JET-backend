@@ -17,7 +17,7 @@ const router = express.Router();
 
 router.post(
     '/basic',
-    validator(schema.signup),
+    validator(schema.register),
     asyncHandler(async (req: RoleRequest, res) => {
         const user = await UserRepo.findByEmail(req.body.email);
         if (user) throw new BadRequestError('User already registered');
@@ -28,7 +28,7 @@ router.post(
 
         // Cripta password
         const passwordHash = await bcrypt.hash(req.body.password, 10);
-
+        
         const { user: createdUser, keystore } = await UserRepo.create(
             {
                 firstName: req.body.firstName,
@@ -38,7 +38,7 @@ router.post(
             } as User,
             accessTokenKey,
             refreshTokenKey,
-            RoleCode.WAITER,
+            req.body.roles,
         );
 
         const tokens = await createTokens(

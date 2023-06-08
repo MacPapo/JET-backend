@@ -8,7 +8,7 @@ export default interface User {
     _id: Types.ObjectId;
     firstName?: string;
     lastName?: string;
-    email?: string;
+    email: string;
     password?: string;
     roles: Role[];
     createdAt?: Date;
@@ -33,6 +33,7 @@ const schema = new Schema<User>(
             required: true,
             trim: true,
             select: false,
+            index: true,
         },
         password: {
             type: Schema.Types.String,
