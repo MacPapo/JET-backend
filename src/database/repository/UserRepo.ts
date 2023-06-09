@@ -54,13 +54,13 @@ async function findFieldsById(
     id: Types.ObjectId,
     ...fields: string[]
 ): Promise<User | null> {
-    return UserModel.findOne({ _id: id, status: true }, [...fields])
+    return UserModel.findOne({ _id: id }, [...fields])
         .lean()
         .exec();
 }
 
 async function findPublicProfileById(id: Types.ObjectId): Promise<User | null> {
-    return UserModel.findOne({ _id: id, status: true }).lean().exec();
+    return UserModel.findOne({ _id: id }).lean().exec();
 }
 
 async function create(
@@ -78,7 +78,6 @@ async function create(
     if (!roles) throw new InternalError('Role must be defined');    
 
     user.roles = roles;
-    console.log(user.roles);
     user.createdAt = user.updatedAt = now;
     const createdUser = await UserModel.create(user);
     const keystore = await KeystoreRepo.create(

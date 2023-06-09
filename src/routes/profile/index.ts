@@ -38,7 +38,7 @@ router.put(
     if (req.body.firstName) user.firstName = req.body.firstName;
     await UserRepo.updateInfo(user);
 
-    const data = _.pick(user, ['name', 'profilePicUrl']);
+    const data = _.pick(user, ['name']);
 
     return new SuccessResponse('Profile updated', data).send(res);
   }),

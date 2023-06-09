@@ -15,6 +15,7 @@ const schema = new Schema<Table>(
         number: {
             type: Schema.Types.Number,
             required: true,
+            unique: true,
             min: 0,
             index: true,
         },

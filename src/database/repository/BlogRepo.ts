@@ -2,7 +2,7 @@ import Blog, { BlogModel } from '../model/Blog';
 import { Types } from 'mongoose';
 import User from '../model/User';
 
-const AUTHOR_DETAIL = 'name profilePicUrl';
+const AUTHOR_DETAIL = 'firstName lastName';
 
 async function create(blog: Blog): Promise<Blog> {
   const now = new Date();

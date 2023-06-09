@@ -16,6 +16,7 @@ const schema = new Schema<Food>(
         name: {
             type: Schema.Types.String,
             trim: true,
+            unique: true,
             maxlength: 200,
             index: true
         },
