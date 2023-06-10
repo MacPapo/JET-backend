@@ -10,7 +10,17 @@ async function findFoodIfExists(name: string): Promise<Food | null> {
   return FoodModel.findOne({ name: name }).lean().exec();
 }
 
+async function findFoodById(id: Types.ObjectId): Promise<Food | null> {
+    return FoodModel.findOne({ id: id }).lean().exec();
+}
+
+async function deleteFood(id: Types.ObjectId): Promise<Food | null> {
+    return FoodModel.findByIdAndDelete(id).lean().exec();
+}
+
 export default {
     create,
     findFoodIfExists,
+    findFoodById,
+    deleteFood
 };

@@ -20,7 +20,7 @@ async function deleteTable(id: Types.ObjectId): Promise<Table | null> {
 
 export default {
     create,
-    findTableById,
     findTableIfExists,
+    findTableById,
     deleteTable
 };

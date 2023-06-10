@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { JoiAuthBearer } from '../../helpers/validator';
+import { JoiAuthBearer, JoiObjectId } from '../../helpers/validator';
 import { RoleCode } from '../../database/model/Role'
 
 export default {
@@ -21,5 +21,8 @@ export default {
         email: Joi.string().required().email(),
         password: Joi.string().required().min(6),
         roles: Joi.array().items(Joi.string().valid(...Object.values(RoleCode))).required(),
+    }),
+    userId:Joi.object().keys({
+        id: JoiObjectId().required(),
     }),
 };

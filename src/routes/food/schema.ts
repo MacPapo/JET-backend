@@ -8,4 +8,7 @@ export default {
         description: Joi.string().optional().min(3).max(2000),
         productionTime: Joi.number().required().min(0),
     }),
+    foodId: Joi.object().keys({
+        id: JoiObjectId().required(),
+    }),
 };

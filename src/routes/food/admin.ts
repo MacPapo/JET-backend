@@ -41,4 +41,19 @@ router.post(
     }),
 );
 
+router.delete(
+    '/delete/:id',
+    validator(schema.foodId, ValidationSource.PARAM),
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const food = await FoodRepo.findFoodById(
+            new Types.ObjectId(req.params.id)
+        );
+        if (!food) throw new BadRequestError('Food with this number does not exists');
+
+        await FoodRepo.deleteFood(food._id);
+        return new SuccessMsgResponse('Food deleted successfully').send(res);
+    }),
+);
+
+
 export default router;

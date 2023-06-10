@@ -115,6 +115,10 @@ async function updateInfo(user: User): Promise<any> {
         .exec();
 }
 
+async function deleteUser(id: Types.ObjectId): Promise<User | null> {
+    return UserModel.findByIdAndDelete(id).lean().exec();
+}
+
 export default {
     exists,
     findPrivateProfileById,
@@ -125,4 +129,5 @@ export default {
     create,
     update,
     updateInfo,
+    deleteUser
 };

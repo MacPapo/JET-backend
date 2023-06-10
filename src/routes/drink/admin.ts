@@ -41,4 +41,18 @@ router.post(
     }),
 );
 
+router.delete(
+    '/delete/:id',
+    validator(schema.drinkId, ValidationSource.PARAM),
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const drink = await DrinkRepo.findDrinkById(
+            new Types.ObjectId(req.params.id)
+        );
+        if (!drink) throw new BadRequestError('Drink with this number does not exists');
+
+        await DrinkRepo.deleteDrink(drink._id);
+        return new SuccessMsgResponse('Drink deleted successfully').send(res);
+    }),
+);
+
 export default router;
