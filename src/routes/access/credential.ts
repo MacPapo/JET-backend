@@ -1,5 +1,4 @@
 import express from 'express';
-import { SuccessResponse } from '../../core/ApiResponse';
 import { RoleRequest } from 'app-request';
 import UserRepo from '../../database/repository/UserRepo';
 import { BadRequestError } from '../../core/ApiError';

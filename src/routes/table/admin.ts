@@ -40,6 +40,14 @@ router.post(
     }),
 );
 
+router.get(
+    '/list',
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const tables = await TableRepo.findAll();
+        return new SuccessResponse('success', tables).send(res);
+    }),
+);
+
 router.delete(
     '/delete/:id',
     validator(schema.tableId, ValidationSource.PARAM),

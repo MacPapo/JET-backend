@@ -18,9 +18,14 @@ async function deleteTable(id: Types.ObjectId): Promise<Table | null> {
     return TableModel.findByIdAndDelete(id).lean().exec();
 }
 
+async function findAll(): Promise<Table[]> {
+    return TableModel.find().lean().exec();
+}
+
 export default {
     create,
     findTableIfExists,
     findTableById,
+    findAll,
     deleteTable
 };

@@ -41,6 +41,14 @@ router.post(
     }),
 );
 
+router.get(
+    '/list',
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const foods = await FoodRepo.findAll();
+        return new SuccessResponse('success', foods).send(res);
+    }),
+);
+
 router.delete(
     '/delete/:id',
     validator(schema.foodId, ValidationSource.PARAM),

@@ -41,6 +41,14 @@ router.post(
     }),
 );
 
+router.get(
+    '/list',
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const drinks = await DrinkRepo.findAll();
+        return new SuccessResponse('success', drinks).send(res);
+    }),
+);
+
 router.delete(
     '/delete/:id',
     validator(schema.drinkId, ValidationSource.PARAM),
