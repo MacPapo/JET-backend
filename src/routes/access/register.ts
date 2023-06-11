@@ -16,7 +16,7 @@ import { getUserData } from './utils';
 const router = express.Router();
 
 router.post(
-    '/basic',
+    '/',
     validator(schema.register),
     asyncHandler(async (req: RoleRequest, res) => {
         const user = await UserRepo.findByEmail(req.body.email);

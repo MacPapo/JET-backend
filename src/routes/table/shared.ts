@@ -18,39 +18,16 @@ const router = express.Router();
 /*-------------------------------------------------------------------------*/
 router.use(
     authentication,
-    role(RoleCode.ADMIN),
+    role(RoleCode.WAITER, RoleCode.ADMIN, RoleCode.COOKER),
     authorization,
 );
 /*-------------------------------------------------------------------------*/
 
-router.post(
+router.get(
     '/',
-    validator(schema.tableCreate),
     asyncHandler(async (req: ProtectedRequest, res) => {
-        const table = await TableRepo.findTableIfExists(req.body.number);
-        if (table) throw new BadRequestError('Table with this number already exists');
-
-        const createTable = await TableRepo.create({
-            number: req.body.number,
-            seats: req.body.seats,
-            isAvailable: req.body.isAvailable,
-        } as Table);
-
-        new SuccessResponse('Table created successfully', createTable).send(res);
-    }),
-);
-
-router.delete(
-    '/:id',
-    validator(schema.tableId, ValidationSource.PARAM),
-    asyncHandler(async (req: ProtectedRequest, res) => {
-        const table = await TableRepo.findTableById(
-            new Types.ObjectId(req.params.id)
-        );
-        if (!table) throw new BadRequestError('Table with this number does not exists');
-
-        await TableRepo.deleteTable(table._id);
-        return new SuccessMsgResponse('Table deleted successfully').send(res);
+        const tables = await TableRepo.findAll();
+        return new SuccessResponse('success', tables).send(res);
     }),
 );
 

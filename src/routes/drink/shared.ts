@@ -18,40 +18,16 @@ const router = express.Router();
 /*-------------------------------------------------------------------------*/
 router.use(
     authentication,
-    role(RoleCode.ADMIN),
+    role(RoleCode.WAITER, RoleCode.ADMIN, RoleCode.COOKER),
     authorization,
 );
 /*-------------------------------------------------------------------------*/
 
-router.post(
+router.get(
     '/',
-    validator(schema.drinkCreate),
     asyncHandler(async (req: ProtectedRequest, res) => {
-        const drink = await DrinkRepo.findDrinkIfExists(req.body.name);
-        if (drink) throw new BadRequestError('Drink with this name already exists');
-
-        const createDrink = await DrinkRepo.create({
-            name: req.body.name,
-            price: req.body.price,
-            description: req.body.description,
-            productionTime: req.body.productionTime,
-        } as Drink);
-
-        new SuccessResponse('Drink created successfully', createDrink).send(res);
-    }),
-);
-
-router.delete(
-    '/:id',
-    validator(schema.drinkId, ValidationSource.PARAM),
-    asyncHandler(async (req: ProtectedRequest, res) => {
-        const drink = await DrinkRepo.findDrinkById(
-            new Types.ObjectId(req.params.id)
-        );
-        if (!drink) throw new BadRequestError('Drink with this number does not exists');
-
-        await DrinkRepo.deleteDrink(drink._id);
-        return new SuccessMsgResponse('Drink deleted successfully').send(res);
+        const drinks = await DrinkRepo.findAll();
+        return new SuccessResponse('success', drinks).send(res);
     }),
 );
 
