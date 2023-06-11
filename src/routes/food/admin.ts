@@ -41,6 +41,26 @@ router.post(
     }),
 );
 
+router.put(
+    '/:id',
+    validator(schema.foodId, ValidationSource.PARAM),
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const food = await FoodRepo.findFoodById(
+            new Types.ObjectId(req.params.id),
+        );
+        if (!food) throw new BadRequestError('Food does not exists');
+
+        food.name = req.body.name;
+        food.price = req.body.price;
+        food.description = req.body.description;
+        food.productionTime = req.body.productionTime;
+
+        await FoodRepo.update(food);
+        return new SuccessMsgResponse('Food updated successfully').send(res);
+    }),
+);
+
+
 router.delete(
     '/:id',
     validator(schema.foodId, ValidationSource.PARAM),

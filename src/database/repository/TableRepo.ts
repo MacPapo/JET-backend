@@ -6,6 +6,15 @@ async function create(table: Table): Promise<Table> {
     return createdTable.toObject();
 }
 
+// TODO: fix Duplicate Key error
+async function update(table: Table): Promise<Table | null> {
+    return TableModel.findByIdAndUpdate(table._id, table, {
+      new: true,
+    })
+    .lean()
+    .exec();
+}
+
 async function findTableIfExists(number: number): Promise<Table | null> {
     return TableModel.findOne({ number: number }).lean().exec();
 }
@@ -24,6 +33,7 @@ async function findAll(): Promise<Table[]> {
 
 export default {
     create,
+    update,
     findTableIfExists,
     findTableById,
     findAll,

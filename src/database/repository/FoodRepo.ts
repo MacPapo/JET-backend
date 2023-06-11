@@ -6,6 +6,15 @@ async function create(food: Food): Promise<Food> {
     return createdFood.toObject();
 }
 
+// TODO: fix Duplicate Key error
+async function update(food: Food): Promise<Food | null> {
+    return FoodModel.findByIdAndUpdate(food._id, food, {
+      new: true,
+    })
+    .lean()
+    .exec();
+}
+
 async function findFoodIfExists(name: string): Promise<Food | null> {
   return FoodModel.findOne({ name: name }).lean().exec();
 }
@@ -24,6 +33,7 @@ async function findAll(): Promise<Food[]> {
 
 export default {
     create,
+    update,
     findFoodIfExists,
     findFoodById,
     findAll,
