@@ -6,7 +6,6 @@ async function create(drink: Drink): Promise<Drink> {
     return createdDrink.toObject();
 }
 
-// TODO: fix Duplicate Key error
 async function update(drink: Drink): Promise<Drink | null> {
     return DrinkModel.findByIdAndUpdate(drink._id, drink, {
       new: true,
@@ -15,6 +14,9 @@ async function update(drink: Drink): Promise<Drink | null> {
     .exec();
 }
 
+async function hasSameName(name: string): Promise<Boolean> {
+    return await findDrinkIfExists(name) != null ? true : false;
+}
 
 async function findDrinkIfExists(name: string): Promise<Drink | null> {
   return DrinkModel.findOne({ name: name }).lean().exec();
@@ -35,6 +37,7 @@ async function deleteDrink(id: Types.ObjectId): Promise<Drink | null> {
 export default {
     create,
     update,
+    hasSameName,
     findDrinkIfExists,
     findDrinkById,
     findAll,

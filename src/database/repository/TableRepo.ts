@@ -15,6 +15,10 @@ async function update(table: Table): Promise<Table | null> {
     .exec();
 }
 
+async function hasSameNumber(number: number): Promise<Boolean> {
+    return await findTableIfExists(number) != null ? true : false;
+}
+
 async function findTableIfExists(number: number): Promise<Table | null> {
     return TableModel.findOne({ number: number }).lean().exec();
 }
@@ -34,6 +38,7 @@ async function findAll(): Promise<Table[]> {
 export default {
     create,
     update,
+    hasSameNumber,
     findTableIfExists,
     findTableById,
     findAll,

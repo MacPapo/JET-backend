@@ -40,6 +40,31 @@ router.post(
     }),
 );
 
+router.put(
+    '/:id',
+    validator(schema.tableUpdate, ValidationSource.PARAM),
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const table = await TableRepo.findTableById(
+            new Types.ObjectId(req.params.id),
+        );
+        if (!table) throw new BadRequestError('Table does not exists');
+
+        if (table.number !== req.body.number) {
+            if ( !(await TableRepo.hasSameNumber(req.body.number)))
+                table.number = req.body.number;
+        }
+
+        if (table.seats !== req.body.seats)
+            table.seats = req.body.seats
+
+        if (table.isAvailable !== req.body.isAvailable)
+            table.isAvailable = req.body.isAvailable;
+        
+        await TableRepo.update(table);
+        return new SuccessMsgResponse('Table updated successfully').send(res);
+    }),
+);
+
 router.delete(
     '/:id',
     validator(schema.tableId, ValidationSource.PARAM),

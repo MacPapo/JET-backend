@@ -25,4 +25,9 @@ export default {
     userId:Joi.object().keys({
         id: JoiObjectId().required(),
     }),
+    update: Joi.object().keys({
+        firstName: Joi.string().required().min(3),
+        lastName: Joi.string().required().min(3),
+        email: Joi.string().required().email(),
+    }),
 };

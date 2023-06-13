@@ -41,6 +41,34 @@ router.post(
     }),
 );
 
+router.put(
+    '/:id',
+    validator(schema.drinkUpdate, ValidationSource.PARAM),
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const drink = await DrinkRepo.findDrinkById(
+            new Types.ObjectId(req.params.id),
+        );
+        if (!drink) throw new BadRequestError('Drink does not exists');
+
+        if (drink.name !== req.body.name) {
+            if ( !(await DrinkRepo.hasSameName(req.body.name)))
+                drink.name = req.body.name;
+        }
+
+        if (drink.price !== req.body.price)
+            drink.price = req.body.price
+
+        if (drink.description !== req.body.description)
+            drink.description = req.body.description;
+        
+        if (drink.productionTime !== req.body.productionTime)
+            drink.productionTime = req.body.productionTime;
+
+        await DrinkRepo.update(drink);
+        return new SuccessMsgResponse('Drink updated successfully').send(res);
+    }),
+);
+
 router.delete(
     '/:id',
     validator(schema.drinkId, ValidationSource.PARAM),

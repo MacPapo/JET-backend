@@ -6,13 +6,16 @@ async function create(food: Food): Promise<Food> {
     return createdFood.toObject();
 }
 
-// TODO: fix Duplicate Key error
 async function update(food: Food): Promise<Food | null> {
     return FoodModel.findByIdAndUpdate(food._id, food, {
       new: true,
     })
     .lean()
     .exec();
+}
+
+async function hasSameName(name: string): Promise<Boolean> {
+    return await findFoodIfExists(name) != null ? true : false;
 }
 
 async function findFoodIfExists(name: string): Promise<Food | null> {
@@ -34,6 +37,7 @@ async function findAll(): Promise<Food[]> {
 export default {
     create,
     update,
+    hasSameName,
     findFoodIfExists,
     findFoodById,
     findAll,
