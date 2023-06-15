@@ -1,5 +1,5 @@
 import express from 'express';
-import { SuccessMsgResponse, TokenRefreshResponse } from '../../core/ApiResponse';
+import { TokenRefreshResponse } from '../../core/ApiResponse';
 import { ProtectedRequest } from 'app-request';
 import { Types } from 'mongoose';
 import UserRepo from '../../database/repository/UserRepo';
@@ -21,7 +21,7 @@ const router = express.Router();
 router.post(
     '/refresh',
     validator(schema.auth, ValidationSource.HEADER),
-    validator(schema.refreshToken),
+    validator(schema.refreshToken, ValidationSource.BODY),
     asyncHandler(async (req: ProtectedRequest, res) => {
         req.accessToken = getAccessToken(req.headers.authorization); // Express headers are auto converted to lowercase
 

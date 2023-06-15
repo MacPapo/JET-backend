@@ -43,25 +43,23 @@ router.post(
 
 router.put(
     '/:id',
-    validator(schema.drinkUpdate, ValidationSource.PARAM),
+    validator(schema.drinkId, ValidationSource.PARAM),
     asyncHandler(async (req: ProtectedRequest, res) => {
         const drink = await DrinkRepo.findDrinkById(
             new Types.ObjectId(req.params.id),
         );
         if (!drink) throw new BadRequestError('Drink does not exists');
 
-        if (drink.name !== req.body.name) {
-            if ( !(await DrinkRepo.hasSameName(req.body.name)))
+        if (req.body.name && !(await DrinkRepo.hasSameName(req.body.name)))
                 drink.name = req.body.name;
-        }
-
-        if (drink.price !== req.body.price)
+        
+        if (req.body.price && drink.price !== req.body.price)
             drink.price = req.body.price
 
-        if (drink.description !== req.body.description)
+        if (req.body.description && drink.description !== req.body.description)
             drink.description = req.body.description;
         
-        if (drink.productionTime !== req.body.productionTime)
+        if (req.body.productionTime && drink.productionTime !== req.body.productionTime)
             drink.productionTime = req.body.productionTime;
 
         await DrinkRepo.update(drink);

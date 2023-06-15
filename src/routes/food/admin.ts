@@ -43,25 +43,23 @@ router.post(
 
 router.put(
     '/:id',
-    validator(schema.foodUpdate, ValidationSource.PARAM),
+    validator(schema.foodId, ValidationSource.PARAM),
     asyncHandler(async (req: ProtectedRequest, res) => {
         const food = await FoodRepo.findFoodById(
             new Types.ObjectId(req.params.id),
         );
         if (!food) throw new BadRequestError('Food does not exists');
 
-        if (food.name !== req.body.name) {
-            if ( !(await FoodRepo.hasSameName(req.body.name)))
-                food.name = req.body.name;
-        }
-
-        if (food.price !== req.body.price)
+        if (req.body.name && !(await FoodRepo.hasSameName(req.body.name)))
+            food.name = req.body.name;
+        
+        if (req.body.price && food.price !== req.body.price)
             food.price = req.body.price
 
-        if (food.description !== req.body.description)
+        if (req.body.description && food.description !== req.body.description)
             food.description = req.body.description;
         
-        if (food.productionTime !== req.body.productionTime)
+        if (req.body.productionTime && food.productionTime !== req.body.productionTime)
             food.productionTime = req.body.productionTime;
 
         await FoodRepo.update(food);
