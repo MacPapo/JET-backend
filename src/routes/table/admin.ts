@@ -43,6 +43,7 @@ router.post(
 router.put(
     '/:id',
     validator(schema.tableId, ValidationSource.PARAM),
+    validator(schema.tableUpdate, ValidationSource.BODY),
     asyncHandler(async (req: ProtectedRequest, res) => {
         const table = await TableRepo.findTableById(
             new Types.ObjectId(req.params.id),

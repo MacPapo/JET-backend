@@ -13,12 +13,12 @@ const router = express.Router();
 /*-------------------------------------------------------------------------*/
 router.use(
     authentication,
-    role(RoleCode.WAITER, RoleCode.ADMIN, RoleCode.COOKER),
+    role(RoleCode.WAITER),
     authorization,
 );
 /*-------------------------------------------------------------------------*/
 
-router.get(
+router.post(
     '/',
     asyncHandler(async (req: ProtectedRequest, res) => {
         const drinks = await DrinkRepo.findAll();

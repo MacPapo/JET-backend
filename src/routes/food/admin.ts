@@ -44,6 +44,7 @@ router.post(
 router.put(
     '/:id',
     validator(schema.foodId, ValidationSource.PARAM),
+    validator(schema.foodUpdate, ValidationSource.BODY),
     asyncHandler(async (req: ProtectedRequest, res) => {
         const food = await FoodRepo.findFoodById(
             new Types.ObjectId(req.params.id),
