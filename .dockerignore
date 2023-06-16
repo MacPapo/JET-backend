@@ -1,16 +1,10 @@
-# Add any directories, files, or patterns you don't want to be tracked by version control
-.idea
-
-# ignore vs code project config files
-.vscode
-.vs
-
 # ignore logs
 logs
 *.log
 
 # ignore 3rd party lib
 node_modules
+npm-debug.log
 
 # Ignore built files
 build/**/*
