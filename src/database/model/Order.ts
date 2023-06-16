@@ -54,12 +54,10 @@ const schema = new Schema<Order>(
         },
         createdAt: {
             type: Schema.Types.Date,
-            required: true,
             select: false,
         },
         updatedAt: {
             type: Schema.Types.Date,
-            required: true,
             select: false,
         },
     },

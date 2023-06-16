@@ -9,20 +9,10 @@ export default {
         id: JoiObjectId().required(),
     }),
     createOrder: Joi.object().keys({
-        table: Joi.number().required().integer().min(1),
+        table: JoiObjectId().required(),
         waiter: JoiObjectId().required(),
-        foods: Joi.array().items(Joi.object<Food>({
-            name: Joi.string().required(),
-            price: Joi.number().required().min(0),
-            description: Joi.string().required(),
-            productionTime: Joi.number().required().min(0),
-        })).required(),
-        drinks: Joi.array().items(Joi.object<Drink>({
-            name: Joi.string().required(),
-            price: Joi.number().required().min(0),
-            description: Joi.string().required(),
-            productionTime: Joi.number().required().min(0),
-        })).required(),
+        foods: Joi.array().items(JoiObjectId()).required(),
+        drinks: Joi.array().items(JoiObjectId()).required(),
         status: Joi.string().valid(...Object.values(OrderStatus)).required(),
         createdAt: Joi.date().required(),
         updatedAt: Joi.date().required(),
@@ -47,3 +37,16 @@ export default {
         updatedAt: Joi.date(),
     }),
 };
+
+// foods: Joi.array().items(Joi.object<Food>({
+//             name: Joi.string().required(),
+//             price: Joi.number().required().min(0),
+//             description: Joi.string().required(),
+//             productionTime: Joi.number().required().min(0),
+//         })).required(),
+//         drinks: Joi.array().items(Joi.object<Drink>({
+//             name: Joi.string().required(),
+//             price: Joi.number().required().min(0),
+//             description: Joi.string().required(),
+//             productionTime: Joi.number().required().min(0),
+//         })).required(),

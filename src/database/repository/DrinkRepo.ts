@@ -8,10 +8,10 @@ async function create(drink: Drink): Promise<Drink> {
 
 async function update(drink: Drink): Promise<Drink | null> {
     return DrinkModel.findByIdAndUpdate(drink._id, drink, {
-      new: true,
+        new: true,
     })
-    .lean()
-    .exec();
+        .lean()
+        .exec();
 }
 
 async function hasSameName(name: string): Promise<Boolean> {
@@ -19,7 +19,7 @@ async function hasSameName(name: string): Promise<Boolean> {
 }
 
 async function findDrinkIfExists(name: string): Promise<Drink | null> {
-  return DrinkModel.findOne({ name: name }).lean().exec();
+    return DrinkModel.findOne({ name: name }).lean().exec();
 }
 
 async function findDrinkById(id: Types.ObjectId): Promise<Drink | null> {
@@ -34,6 +34,10 @@ async function deleteDrink(id: Types.ObjectId): Promise<Drink | null> {
     return DrinkModel.findByIdAndDelete(id).lean().exec();
 }
 
+async function findByIds(ids: Types.ObjectId[]): Promise<Drink[]> {
+    return DrinkModel.find({ _id: { $in: ids } }).lean().exec();
+}
+
 export default {
     create,
     update,
@@ -41,5 +45,6 @@ export default {
     findDrinkIfExists,
     findDrinkById,
     findAll,
-    deleteDrink
+    deleteDrink,
+    findByIds,
 };
