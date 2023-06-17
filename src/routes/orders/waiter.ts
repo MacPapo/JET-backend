@@ -60,6 +60,10 @@ router.post(
             updatedAt: now,
         } as Order);
 
+        table.isAvailable = false;
+        const updatedTable = await TableRepo.update(table);
+        if (!updatedTable) { throw new BadRequestError('Table could not be updated'); }
+
         new SuccessResponse('Order created successfully', newOrder).send(res);
     }),
 );
