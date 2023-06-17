@@ -1,5 +1,5 @@
 import User, { UserModel } from '../model/User';
-import { RoleModel } from '../model/Role';
+import { RoleCode, RoleModel } from '../model/Role';
 import { InternalError } from '../../core/ApiError';
 import { Types } from 'mongoose';
 import KeystoreRepo from './KeystoreRepo';
@@ -26,12 +26,23 @@ async function findPrivateProfileById(
 
 // contains critical information of the user
 async function findById(id: Types.ObjectId): Promise<User | null> {
-    return UserModel.findOne({ _id: id, status: true })
+    return UserModel.findOne({ _id: id })
         .select('+email +password +roles')
         .populate({
             path: 'roles',
             match: { status: true },
         })
+        .lean()
+        .exec();
+}
+
+async function findWaiterUsers(): Promise<User[]> {
+  return UserModel.find({ roles: { $elemMatch: { code: 'WAITER' } } }).exec();
+}
+
+async function findWaiterById(id: Types.ObjectId): Promise<User | null> {
+    return UserModel.findOne({ _id: id,
+                               roles: { $elemMatch: { code: RoleCode.WAITER } }})
         .lean()
         .exec();
 }
@@ -121,6 +132,11 @@ async function deleteUser(id: Types.ObjectId): Promise<User | null> {
 
 export default {
     exists,
+
+    // Waiter only
+    findWaiterById,
+    findWaiterUsers,
+    
     findPrivateProfileById,
     findById,
     findByEmail,
