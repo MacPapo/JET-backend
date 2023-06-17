@@ -19,11 +19,11 @@ export default {
             quantity: Joi.number().integer().min(1).required(),
         }).required(),
     }),
-    updateOrder: Joi.object().keys({
-        table: Joi.number().integer().min(1),
-        waiter: JoiObjectId(),
-        foods: Joi.array().items(JoiObjectId()).required(),
-        drinks: Joi.array().items(JoiObjectId()).required(),
-        status: Joi.string().valid(...Object.values(OrderStatus)),
-    }),
+    // updateOrder: Joi.object().keys({
+    //     table: Joi.number().integer().min(1),
+    //     waiter: JoiObjectId(),
+    //     foods: Joi.array().items(JoiObjectId()).required(),
+    //     drinks: Joi.array().items(JoiObjectId()).required(),
+    //     status: Joi.string().valid(...Object.values(OrderStatus)),
+    // }),
 };

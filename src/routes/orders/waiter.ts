@@ -27,6 +27,23 @@ router.use(
 );
 /*-------------------------------------------------------------------------*/
 
+router.get(
+    '/',
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const orders = await OrderRepo.findAll();
+        new SuccessResponse('Success', orders).send(res);
+    }),
+);
+
+router.get(
+    '/:tableId',
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const order = await OrderRepo.findByTable(parseInt(req.params.tableId));
+        if (!order) { throw new BadRequestError('Order does not exist'); }
+        new SuccessResponse('Success', order).send(res);
+    }),
+);
+
 router.post(
     '/',
     validator(schema.createOrder),
@@ -67,5 +84,56 @@ router.post(
         new SuccessResponse('Order created successfully', newOrder).send(res);
     }),
 );
+
+router.put(
+    '/:id',
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const order = await OrderRepo.findByTable(parseInt(req.params.id));
+        if (!order) { throw new BadRequestError('Order does not exist'); }
+
+        const status = order.status;
+
+        // STATUS FLOW PENDING -> STARTED -> COMPLETED -> SERVED -> DELETED
+        switch (status) {
+            case OrderStatus.PENDING:
+                order.status = OrderStatus.STARTED;
+                break;
+            case OrderStatus.STARTED:
+                order.status = OrderStatus.COMPLETED;
+                break;
+            case OrderStatus.COMPLETED:
+                order.status = OrderStatus.SERVED;
+                break;
+            default:
+                console.log('Order status not valid');
+                break;
+        }
+
+
+        if (order.status === OrderStatus.SERVED) {
+
+            // SET TABLE AVAILABLE
+            const table = await TableRepo.findTableIfExists(order.table);
+            if (!table) { throw new BadRequestError('Table does not exist'); }
+            table.isAvailable = true;
+            const updatedTable = await TableRepo.update(table);
+            if (!updatedTable) { throw new BadRequestError('Table could not be updated'); }
+
+            // DELETE ORDER
+            const deletedOrder = await OrderRepo.deleteOrder(order._id);
+            if (!deletedOrder) { throw new BadRequestError('Order could not be deleted'); }
+
+            new SuccessResponse('Order deleted successfully', deletedOrder).send(res);
+        } else {
+
+            // UPDATE ORDER WITH NEW STATUS
+            const updatedOrder = await OrderRepo.update(order);
+            if (!updatedOrder) { throw new BadRequestError('Order could not be updated'); }
+
+            new SuccessResponse('Order updated successfully', updatedOrder).send(res);
+        }
+    }),
+);
+
 
 export default router;

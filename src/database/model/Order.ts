@@ -8,6 +8,7 @@ export enum OrderStatus {
     STARTED = 'STARTED',
     COMPLETED = 'COMPLETED',
     ABORTED = 'ABORTED',
+    SERVED = 'SERVED',
 }
 
 export default interface Order {

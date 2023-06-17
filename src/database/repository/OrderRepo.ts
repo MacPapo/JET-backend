@@ -12,8 +12,8 @@ async function update(order: Order): Promise<Order | null> {
     }).lean().exec();
 }
 
-async function findByTable(_id: Types.ObjectId): Promise<Order | null> {
-    return OrderModel.findOne({ table: _id }).lean().exec();
+async function findByTable(number: number): Promise<Order | null> {
+    return OrderModel.findOne({ table: number }).lean().exec();
 }
 
 async function findOrderById(id: Types.ObjectId): Promise<Order | null> {
