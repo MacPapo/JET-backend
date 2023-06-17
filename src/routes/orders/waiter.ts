@@ -15,6 +15,7 @@ import FoodRepo from '../../database/repository/FoodRepo';
 import OrderRepo from '../../database/repository/OrderRepo';
 import UserRepo from '../../database/repository/UserRepo';
 import role from '../../helpers/role';
+import TableRepo from '../../database/repository/TableRepo';
 
 const router = express.Router();
 
@@ -30,6 +31,9 @@ router.post(
     '/',
     validator(schema.createOrder),
     asyncHandler(async (req: ProtectedRequest, res) => {
+        const table = await TableRepo.findTableIfExists(req.body.table);
+        if (!table) { throw new BadRequestError('Table does not exist'); }
+
         const order = await OrderRepo.findByTable(req.body.table);
         if (order) { throw new BadRequestError('Order already exists'); }
 

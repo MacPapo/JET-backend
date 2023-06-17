@@ -37,12 +37,11 @@ async function findById(id: Types.ObjectId): Promise<User | null> {
 }
 
 async function findWaiterUsers(): Promise<User[]> {
-  return UserModel.find({ roles: { $elemMatch: { code: 'WAITER' } } }).exec();
+    return UserModel.find({ roles: { $elemMatch: { code: 'WAITER' } } }).exec();
 }
 
 async function findWaiterById(id: Types.ObjectId): Promise<User | null> {
-    return UserModel.findOne({ _id: id,
-                               roles: { $elemMatch: { code: RoleCode.WAITER } }})
+    return UserModel.findOne({ _id: id })
         .lean()
         .exec();
 }
@@ -82,11 +81,11 @@ async function create(
 ): Promise<{ user: User; keystore: Keystore }> {
     const now = new Date();
 
-    const roles = await RoleModel.find({ code: { $in: roleCodes }})
+    const roles = await RoleModel.find({ code: { $in: roleCodes } })
         .select('+code')
         .lean()
         .exec();
-    if (!roles) throw new InternalError('Role must be defined');    
+    if (!roles) throw new InternalError('Role must be defined');
 
     user.roles = roles;
     user.createdAt = user.updatedAt = now;
@@ -136,7 +135,7 @@ export default {
     // Waiter only
     findWaiterById,
     findWaiterUsers,
-    
+
     findPrivateProfileById,
     findById,
     findByEmail,

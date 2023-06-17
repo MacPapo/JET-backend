@@ -13,7 +13,7 @@ export enum OrderStatus {
 export default interface Order {
     _id: Types.ObjectId;
     clients: number;
-    table: Types.ObjectId;
+    table: number;
     waiter: Types.ObjectId;
     foods?: Types.ObjectId[];
     drinks?: Types.ObjectId[];
@@ -30,8 +30,7 @@ const schema = new Schema<Order>(
             min: 1,
         },
         table: {
-            type: Schema.Types.ObjectId,
-            ref: 'TableModel',
+            type: Schema.Types.Number,
             required: true,
             index: true,
         },
@@ -43,14 +42,28 @@ const schema = new Schema<Order>(
         },
         foods: [
             {
-                type: Schema.Types.ObjectId,
-                ref: 'FoodModel',
+                _id: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'FoodModel',
+                },
+                quantity: {
+                    type: Schema.Types.Number,
+                    required: true,
+                    min: 1,
+                },
             },
         ],
         drinks: [
             {
-                type: Schema.Types.ObjectId,
-                ref: 'DrinkModel',
+                _id: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'DrinkModel',
+                },
+                quantity: {
+                    type: Schema.Types.Number,
+                    required: true,
+                    min: 1,
+                },
             },
         ],
         status: {
