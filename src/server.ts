@@ -9,4 +9,4 @@ app
   })
   .on('error', (e) => Logger.error(e));
 
-SocketManager.handleConnection()
+SocketManager.handleConnection();

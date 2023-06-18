@@ -3,6 +3,7 @@ LABEL MAINTAINER="Jacopo Costantini <jacopocostantini32@gmail.com>"
 
 # expose the port
 EXPOSE 4000
+EXPOSE 4001
 
 RUN npm i npm@latest -g
 
