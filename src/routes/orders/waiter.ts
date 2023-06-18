@@ -6,7 +6,7 @@ import { BadRequestError } from '../../core/ApiError';
 import { ProtectedRequest } from 'app-request';
 import { RoleCode } from '../../database/model/Role';
 import schema from './schema';
-import validator, { ValidationSource } from '../../helpers/validator';
+import validator from '../../helpers/validator';
 import asyncHandler from '../../helpers/asyncHandler';
 import authentication from '../../auth/authentication';
 import authorization from '../../auth/authorization';
@@ -27,23 +27,6 @@ router.use(
 );
 /*-------------------------------------------------------------------------*/
 
-router.get(
-    '/',
-    asyncHandler(async (req: ProtectedRequest, res) => {
-        const orders = await OrderRepo.findAll();
-        new SuccessResponse('Success', orders).send(res);
-    }),
-);
-
-router.get(
-    '/:tableId',
-    asyncHandler(async (req: ProtectedRequest, res) => {
-        const order = await OrderRepo.findByTable(parseInt(req.params.tableId));
-        if (!order) { throw new BadRequestError('Order does not exist'); }
-        new SuccessResponse('Success', order).send(res);
-    }),
-);
-
 router.post(
     '/',
     validator(schema.createOrder),
@@ -54,11 +37,9 @@ router.post(
         const order = await OrderRepo.findByTable(req.body.table);
         if (order) { throw new BadRequestError('Order already exists'); }
 
-        console.log(await UserRepo.findWaiterUsers());
         const waiter = await UserRepo.findWaiterById(req.body.waiter);
         if (!waiter) { throw new BadRequestError('Waiter does not exist'); }
 
-        console.log(waiter);
         const drinks = await DrinkRepo.findByIds(req.body.drinks);
         if (drinks.length !== req.body.drinks.length) { throw new BadRequestError('Some drinks do not exist'); }
 
@@ -109,29 +90,11 @@ router.put(
                 break;
         }
 
+        // UPDATE ORDER WITH NEW STATUS
+        const updatedOrder = await OrderRepo.update(order);
+        if (!updatedOrder) { throw new BadRequestError('Order could not be updated'); }
 
-        if (order.status === OrderStatus.SERVED) {
-
-            // SET TABLE AVAILABLE
-            const table = await TableRepo.findTableIfExists(order.table);
-            if (!table) { throw new BadRequestError('Table does not exist'); }
-            table.isAvailable = true;
-            const updatedTable = await TableRepo.update(table);
-            if (!updatedTable) { throw new BadRequestError('Table could not be updated'); }
-
-            // DELETE ORDER
-            const deletedOrder = await OrderRepo.deleteOrder(order._id);
-            if (!deletedOrder) { throw new BadRequestError('Order could not be deleted'); }
-
-            new SuccessResponse('Order deleted successfully', deletedOrder).send(res);
-        } else {
-
-            // UPDATE ORDER WITH NEW STATUS
-            const updatedOrder = await OrderRepo.update(order);
-            if (!updatedOrder) { throw new BadRequestError('Order could not be updated'); }
-
-            new SuccessResponse('Order updated successfully', updatedOrder).send(res);
-        }
+        new SuccessResponse('Order updated successfully', updatedOrder).send(res);
     }),
 );
 

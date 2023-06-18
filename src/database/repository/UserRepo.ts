@@ -10,21 +10,6 @@ async function exists(id: Types.ObjectId): Promise<boolean> {
     return user !== null && user !== undefined;
 }
 
-async function findPrivateProfileById(
-    id: Types.ObjectId,
-): Promise<User | null> {
-    return UserModel.findOne({ _id: id, status: true })
-        .select('+email')
-        .populate({
-            path: 'roles',
-            match: { status: true },
-            select: { code: 1 },
-        })
-        .lean<User>()
-        .exec();
-}
-
-// contains critical information of the user
 async function findById(id: Types.ObjectId): Promise<User | null> {
     return UserModel.findOne({ _id: id })
         .select('+email +password +roles')
@@ -135,8 +120,7 @@ export default {
     // Waiter only
     findWaiterById,
     findWaiterUsers,
-
-    findPrivateProfileById,
+   
     findById,
     findByEmail,
     findFieldsById,

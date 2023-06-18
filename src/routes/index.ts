@@ -9,10 +9,6 @@ import drink from './drink';
 import table from './table';
 import order from './orders';
 
-import blog from './blog';
-import blogs from './blogs';
-import profile from './profile';
-
 const router = express.Router();
 
 /*---------------------------------------------------------*/
@@ -27,9 +23,5 @@ router.use('/foods', food);
 router.use('/drinks', drink);
 router.use('/tables', table);
 router.use('/orders', order);
-
-// router.use('/profile', profile);
-// router.use('/blog', blog);
-// router.use('/blogs', blogs);
 
 export default router;
