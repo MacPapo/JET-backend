@@ -1,7 +1,5 @@
 import express from 'express';
 import { SuccessResponse } from '../../core/ApiResponse';
-import { OrderStatus } from '../../database/model/Order';
-import { BadRequestError } from '../../core/ApiError';
 import { ProtectedRequest } from 'app-request';
 import { RoleCode } from '../../database/model/Role';
 import asyncHandler from '../../helpers/asyncHandler';

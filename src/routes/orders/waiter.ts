@@ -6,7 +6,7 @@ import { BadRequestError } from '../../core/ApiError';
 import { ProtectedRequest } from 'app-request';
 import { RoleCode } from '../../database/model/Role';
 import schema from './schema';
-import validator, { ValidationSource } from '../../helpers/validator';
+import validator from '../../helpers/validator';
 import asyncHandler from '../../helpers/asyncHandler';
 import authentication from '../../auth/authentication';
 import authorization from '../../auth/authorization';
@@ -16,7 +16,6 @@ import OrderRepo from '../../database/repository/OrderRepo';
 import UserRepo from '../../database/repository/UserRepo';
 import role from '../../helpers/role';
 import TableRepo from '../../database/repository/TableRepo';
-import { Types } from 'mongoose';
 
 const router = express.Router();
 
