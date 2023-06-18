@@ -1,5 +1,7 @@
 import express from 'express';
 import { SuccessResponse } from '../../core/ApiResponse';
+import { OrderStatus } from '../../database/model/Order';
+import { BadRequestError } from '../../core/ApiError';
 import { ProtectedRequest } from 'app-request';
 import { RoleCode } from '../../database/model/Role';
 import asyncHandler from '../../helpers/asyncHandler';
@@ -13,7 +15,7 @@ const router = express.Router();
 /*-------------------------------------------------------------------------*/
 router.use(
     authentication,
-    role(RoleCode.COOKER),
+    role(RoleCode.BARTENDER),
     authorization,
 );
 /*-------------------------------------------------------------------------*/
@@ -21,7 +23,7 @@ router.use(
 router.get(
     '/',
     asyncHandler(async (req: ProtectedRequest, res) => {
-        const orders = await OrderRepo.findAllOrderedFoods();
+        const orders = await OrderRepo.findAllOrderedDrinks();
         new SuccessResponse('Success', orders).send(res);
     }),
 );

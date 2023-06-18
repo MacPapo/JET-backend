@@ -6,7 +6,7 @@ import { BadRequestError } from '../../core/ApiError';
 import { ProtectedRequest } from 'app-request';
 import { RoleCode } from '../../database/model/Role';
 import schema from './schema';
-import validator from '../../helpers/validator';
+import validator, { ValidationSource } from '../../helpers/validator';
 import asyncHandler from '../../helpers/asyncHandler';
 import authentication from '../../auth/authentication';
 import authorization from '../../auth/authorization';
@@ -16,6 +16,7 @@ import OrderRepo from '../../database/repository/OrderRepo';
 import UserRepo from '../../database/repository/UserRepo';
 import role from '../../helpers/role';
 import TableRepo from '../../database/repository/TableRepo';
+import { Types } from 'mongoose';
 
 const router = express.Router();
 
@@ -33,6 +34,8 @@ router.post(
     asyncHandler(async (req: ProtectedRequest, res) => {
         const table = await TableRepo.findTableIfExists(req.body.table);
         if (!table) { throw new BadRequestError('Table does not exist'); }
+
+        if (!table.isAvailable || table.number < req.body.clients) { throw new BadRequestError('Table is not available or not enough seats'); }
 
         const order = await OrderRepo.findByTable(req.body.table);
         if (order) { throw new BadRequestError('Order already exists'); }
@@ -65,38 +68,5 @@ router.post(
         new SuccessResponse('Order created successfully', newOrder).send(res);
     }),
 );
-
-router.put(
-    '/:id',
-    asyncHandler(async (req: ProtectedRequest, res) => {
-        const order = await OrderRepo.findByTable(parseInt(req.params.id));
-        if (!order) { throw new BadRequestError('Order does not exist'); }
-
-        const status = order.status;
-
-        // STATUS FLOW PENDING -> STARTED -> COMPLETED -> SERVED -> DELETED
-        switch (status) {
-            case OrderStatus.PENDING:
-                order.status = OrderStatus.STARTED;
-                break;
-            case OrderStatus.STARTED:
-                order.status = OrderStatus.COMPLETED;
-                break;
-            case OrderStatus.COMPLETED:
-                order.status = OrderStatus.SERVED;
-                break;
-            default:
-                console.log('Order status not valid');
-                break;
-        }
-
-        // UPDATE ORDER WITH NEW STATUS
-        const updatedOrder = await OrderRepo.update(order);
-        if (!updatedOrder) { throw new BadRequestError('Order could not be updated'); }
-
-        new SuccessResponse('Order updated successfully', updatedOrder).send(res);
-    }),
-);
-
 
 export default router;

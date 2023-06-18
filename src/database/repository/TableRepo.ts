@@ -8,11 +8,9 @@ async function create(table: Table): Promise<Table> {
 
 // TODO: fix Duplicate Key error
 async function update(table: Table): Promise<Table | null> {
-    return TableModel.findByIdAndUpdate(table._id, table, {
-      new: true,
-    })
-    .lean()
-    .exec();
+    return TableModel.findByIdAndUpdate(table._id, table, { new: true })
+        .lean()
+        .exec();
 }
 
 async function hasSameNumber(number: number): Promise<Boolean> {
@@ -20,19 +18,27 @@ async function hasSameNumber(number: number): Promise<Boolean> {
 }
 
 async function findTableIfExists(number: number): Promise<Table | null> {
-    return TableModel.findOne({ number: number }).lean().exec();
+    return TableModel.findOne({ number: number })
+        .lean()
+        .exec();
 }
 
 async function findTableById(id: Types.ObjectId): Promise<Table | null> {
-    return TableModel.findOne({ id: id }).lean().exec();
+    return TableModel.findOne({ id: id })
+        .lean()
+        .exec();
 }
 
 async function deleteTable(id: Types.ObjectId): Promise<Table | null> {
-    return TableModel.findByIdAndDelete(id).lean().exec();
+    return TableModel.findByIdAndDelete(id)
+        .lean()
+        .exec();
 }
 
 async function findAll(): Promise<Table[]> {
-    return TableModel.find().lean().exec();
+    return TableModel.find()
+        .lean()
+        .exec();
 }
 
 export default {

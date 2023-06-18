@@ -2,6 +2,7 @@ import Order, { OrderModel } from '../model/Order';
 import { Types } from 'mongoose';
 import Food from '../model/Food';
 import { FoodModel } from '../model/Food';
+import Drink, { DrinkModel } from '../model/Drink';
 
 async function create(order: Order): Promise<Order> {
     const createdOrder = await OrderModel.create(order);
@@ -9,15 +10,15 @@ async function create(order: Order): Promise<Order> {
 }
 
 async function update(order: Order): Promise<Order | null> {
-    return OrderModel.findByIdAndUpdate(order._id, order, {
-        new: true,
-    })
+    return OrderModel.findByIdAndUpdate(order._id, order, { new: true })
         .lean()
         .exec();
 }
 
 async function findByTable(number: number): Promise<Order | null> {
-    return OrderModel.findOne({ table: number }).lean().exec();
+    return OrderModel.findOne({ table: number })
+        .lean()
+        .exec();
 }
 
 async function findOrderById(id: Types.ObjectId): Promise<Order | null> {
@@ -38,22 +39,46 @@ async function findAll(): Promise<Order[]> {
         .exec();
 }
 
-async function findAllOrderedFood(): Promise<Food[]> {
-  try {
-    // Trova tutti gli ordini con il campo "foods" popolato
-    const orders = await OrderModel.find({ foods: { $exists: true, $ne: [] } });
+async function findAllOrderedFoods(): Promise<Food[]> {
+    try {
+        // Trova tutti gli ordini con il campo "foods" popolato
+        const orders = await OrderModel.find({ foods: { $exists: true, $ne: [] } });
 
-    // Estrai tutti gli id dei cibi dagli ordini
-    const foodIds = orders.flatMap((order) => order.foods);
+        // Estrai tutti gli id dei cibi dagli ordini
+        const foodIds = orders.flatMap((order) => order.foods);
 
-    // Trova tutti i cibi corrispondenti agli id
-    const foods = await FoodModel.find({ _id: { $in: foodIds } });
+        // Trova tutti i cibi corrispondenti agli id
+        const foods = await FoodModel.find({ _id: { $in: foodIds } })
+            .select('+_id +name +productionTime -description -price')
+            .lean()
+            .exec();
 
-    return foods;
-  } catch (error) {
-    // Gestisci l'errore in base alle tue esigenze
-    throw new Error('Failed to fetch ordered food');
-  }
+        return foods;
+    } catch (error) {
+        // Gestisci l'errore in base alle tue esigenze
+        throw new Error('Failed to fetch ordered food');
+    }
+}
+
+async function findAllOrderedDrinks(): Promise<Drink[]> {
+    try {
+        // Trova tutti gli ordini con il campo "drinks" popolato
+        const orders = await OrderModel.find({ drinks: { $exists: true, $ne: [] } });
+
+        // Estrai tutti gli id dei cibi dagli ordini
+        const drinkIds = orders.flatMap((order) => order.drinks);
+
+        // Trova tutti i cibi corrispondenti agli id
+        const drinks = await DrinkModel.find({ _id: { $in: drinkIds } })
+            .select('+_id +name +productionTime -description -price')
+            .lean()
+            .exec();
+
+        return drinks;
+    } catch (error) {
+        // Gestisci l'errore in base alle tue esigenze
+        throw new Error('Failed to fetch ordered drink');
+    }
 }
 
 export default {
@@ -65,7 +90,10 @@ export default {
     findOrderById,
 
     // Cooker
-    findAllOrderedFood,
+    findAllOrderedFoods,
+
+    // Bartender
+    findAllOrderedDrinks,
 
     findAll,
     deleteOrder
