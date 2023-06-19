@@ -60,7 +60,7 @@ function seed(dbName, user, password) {
         {
             firstName: 'Admin',
             lastName: 'Admin',
-            email: 'admin@xyz.com',
+            email: 'admin@justeatime.com',
             password: '$2a$10$psWmSrmtyZYvtIt/FuJL1OLqsK3iR1fZz5.wUYFuSNkkt.EOX9mLa', // hash of password: changeit
             roles: db.roles
                 .find({})
@@ -235,32 +235,32 @@ function seed(dbName, user, password) {
             name: 'Coca Cola',
             price: 5,
             description: 'Coca Cola',
-            productionTime: 10,
+            productionTime: 1,
         },
         {
             name: 'Fanta',
             price: 5,
             description: 'Fanta',
-            productionTime: 10,
+            productionTime: 1,
         },
         {
 
             name: 'Sprite',
             price: 5,
             description: 'Sprite',
-            productionTime: 10,
+            productionTime: 1,
         },
         {
             name: 'Water',
             price: 5,
             description: 'Water',
-            productionTime: 10,
+            productionTime: 1,
         },
         {
             name: 'Beer',
             price: 5,
             description: 'Beer',
-            productionTime: 10,
+            productionTime: 3,
         }
     ]);
 }

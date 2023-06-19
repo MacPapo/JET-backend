@@ -43,7 +43,7 @@ async function findAllOrderedFoods() {
     try {
         const orders = await OrderModel
             .find({ foods: { $exists: true, $ne: [] } })
-            .select('table waiter foods')
+            .select('table waiter foods createdAt updatedAt')
             .populate('waiter', 'firstName lastName')
             .populate('foods._id', 'name productionTime')
             .lean()
@@ -59,7 +59,7 @@ async function findAllOrderedDrinks() {
     try {
         const orders = await OrderModel
             .find({ drinks: { $exists: true, $ne: [] } })
-            .select('table waiter drinks')
+            .select('table waiter drinks createdAt updatedAt')
             .populate('waiter', 'firstName lastName')
             .populate('drinks._id', 'name productionTime')
             .lean()

@@ -29,8 +29,8 @@ export default interface Order {
     foods?: FoodOrdered[];
     drinks?: DrinkOrdered[];
     status: OrderStatus;
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const schema = new Schema<Order>(
