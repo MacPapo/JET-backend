@@ -5,6 +5,7 @@ export const COLLECTION_NAME = 'bills';
 
 export default interface Bill {
     _id: Types.ObjectId;
+    order: Types.ObjectId;
     clients: number;
     table: number;
     totalPrice: number;
@@ -17,6 +18,11 @@ export default interface Bill {
 
 const schema = new Schema(
     {
+        order: {
+            type: Schema.Types.ObjectId,
+            ref: 'OrderModel',
+            required: true,
+        },
         clients: {
             type: Schema.Types.Number,
             required: true,

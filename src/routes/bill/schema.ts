@@ -6,9 +6,10 @@ export default {
         id: JoiObjectId().required(),
     }),
     createBill: Joi.object().keys({
+        order: JoiObjectId().required(),
         clients: Joi.number().integer().min(1).required(),
         table: Joi.number().integer().min(1).required(),
-        total_price: Joi.number().integer().min(1).required(),
+        totalPrice: Joi.number().integer().min(1).required(),
         foods: Joi.array().items({
             _id: JoiObjectId().required(),
             price: Joi.number().integer().min(1).required(),
