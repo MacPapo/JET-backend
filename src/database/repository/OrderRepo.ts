@@ -39,45 +39,35 @@ async function findAll(): Promise<Order[]> {
         .exec();
 }
 
-async function findAllOrderedFoods(): Promise<Food[]> {
+async function findAllOrderedFoods() {
     try {
-        // Trova tutti gli ordini con il campo "foods" popolato
-        const orders = await OrderModel.find({ foods: { $exists: true, $ne: [] } });
-
-        // Estrai tutti gli id dei cibi dagli ordini
-        const foodIds = orders.flatMap((order) => order.foods);
-
-        // Trova tutti i cibi corrispondenti agli id
-        const foods = await FoodModel.find({ _id: { $in: foodIds } })
-            .select('+_id +name +productionTime -description -price')
+        const orders = await OrderModel
+            .find({ foods: { $exists: true, $ne: [] } })
+            .select('table waiter foods')
+            .populate('waiter', 'firstName lastName')
+            .populate('foods._id', 'name productionTime')
             .lean()
             .exec();
 
-        return foods;
+        return orders;
     } catch (error) {
-        // Gestisci l'errore in base alle tue esigenze
-        throw new Error('Failed to fetch ordered food');
+        throw new Error('Failed to fetch ordered drinks');
     }
 }
 
-async function findAllOrderedDrinks(): Promise<Drink[]> {
+async function findAllOrderedDrinks() {
     try {
-        // Trova tutti gli ordini con il campo "drinks" popolato
-        const orders = await OrderModel.find({ drinks: { $exists: true, $ne: [] } });
-
-        // Estrai tutti gli id dei cibi dagli ordini
-        const drinkIds = orders.flatMap((order) => order.drinks);
-
-        // Trova tutti i cibi corrispondenti agli id
-        const drinks = await DrinkModel.find({ _id: { $in: drinkIds } })
-            .select('+_id +name +productionTime -description -price')
+        const orders = await OrderModel
+            .find({ drinks: { $exists: true, $ne: [] } })
+            .select('table waiter drinks')
+            .populate('waiter', 'firstName lastName')
+            .populate('drinks._id', 'name productionTime')
             .lean()
             .exec();
 
-        return drinks;
+        return orders;
     } catch (error) {
-        // Gestisci l'errore in base alle tue esigenze
-        throw new Error('Failed to fetch ordered drink');
+        throw new Error('Failed to fetch ordered drinks');
     }
 }
 

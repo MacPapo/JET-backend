@@ -11,13 +11,23 @@ export enum OrderStatus {
     SERVED = 'SERVED',
 }
 
+export interface FoodOrdered {
+    _id: Types.ObjectId;
+    quantity: number;
+}
+
+export interface DrinkOrdered {
+    _id: Types.ObjectId;
+    quantity: number;
+}
+
 export default interface Order {
     _id: Types.ObjectId;
     clients: number;
     table: number;
     waiter: Types.ObjectId;
-    foods?: Types.ObjectId[];
-    drinks?: Types.ObjectId[];
+    foods?: FoodOrdered[];
+    drinks?: DrinkOrdered[];
     status: OrderStatus;
     createdAt?: Date;
     updatedAt?: Date;
@@ -37,7 +47,7 @@ const schema = new Schema<Order>(
         },
         waiter: {
             type: Schema.Types.ObjectId,
-            ref: 'UserModel',
+            ref: 'User',
             required: true,
             index: true,
         },
@@ -45,7 +55,7 @@ const schema = new Schema<Order>(
             {
                 _id: {
                     type: Schema.Types.ObjectId,
-                    ref: 'FoodModel',
+                    ref: 'Food',
                 },
                 quantity: {
                     type: Schema.Types.Number,
@@ -58,7 +68,7 @@ const schema = new Schema<Order>(
             {
                 _id: {
                     type: Schema.Types.ObjectId,
-                    ref: 'DrinkModel',
+                    ref: 'Drink',
                 },
                 quantity: {
                     type: Schema.Types.Number,

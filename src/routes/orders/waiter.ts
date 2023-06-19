@@ -34,7 +34,7 @@ router.post(
         const table = await TableRepo.findTableIfExists(req.body.table);
         if (!table) { throw new BadRequestError('Table does not exist'); }
 
-        if (!table.isAvailable || table.number < req.body.clients) { throw new BadRequestError('Table is not available or not enough seats'); }
+        if (!table.isAvailable || table.seats < req.body.clients) { throw new BadRequestError('Table is not available or not enough seats'); }
 
         const order = await OrderRepo.findByTable(req.body.table);
         if (order) { throw new BadRequestError('Order already exists'); }
