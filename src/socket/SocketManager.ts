@@ -12,9 +12,12 @@ class SocketManager {
         this.io.on('connection', (socket) => {
             console.log('New connection: ' + socket.id);
 
-            socket.on('new-order', (order) => {
-                console.log('New order: ' + order);
-                this.io.emit('cooker-bartender-new-order', 'New Order on table n.' + order + ' Added!');
+            socket.on('cooker-new-order', (order) => {
+                this.io.emit('cooker-new-order', 'New Order on table n.' + order.table + ' Added!');
+            });
+
+            socket.on('bartender-new-order', (order) => {
+                this.io.emit('bartender-new-order', 'New Order on table n.' + order.table + ' Added!');
             });
 
             socket.on('error', function (err) {
