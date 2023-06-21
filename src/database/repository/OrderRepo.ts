@@ -1,5 +1,6 @@
-import { Order, OrderModel } from '../model/Order';
+import { CacheOrder, Order, OrderModel } from '../model/Order';
 import { Types } from 'mongoose';
+import { cacheGetAllOrders } from '../../cache/repository/OrderCache';
 
 async function create(order: Order): Promise<Order> {
     const createdOrder = await OrderModel.create(order);
@@ -34,6 +35,10 @@ async function findAll(): Promise<Order[]> {
     return OrderModel.find()
         .lean()
         .exec();
+}
+
+async function findAllDetailed(): Promise<CacheOrder[] | null> {
+    return cacheGetAllOrders();
 }
 
 async function findAllOrderedFoods() {
@@ -81,6 +86,7 @@ export default {
 
     // Bartender
     findAllOrderedDrinks,
+    findAllDetailed,
 
     findAll,
     deleteOrder

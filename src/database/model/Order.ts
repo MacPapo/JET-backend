@@ -4,11 +4,11 @@ export const DOCUMENT_NAME = 'Order';
 export const COLLECTION_NAME = 'orders';
 
 export enum OrderStatus {
-    PENDING = 'PENDING',
-    STARTED = 'STARTED',
+    PENDING   = 'PENDING',
+    STARTED   = 'STARTED',
     COMPLETED = 'COMPLETED',
-    ABORTED = 'ABORTED',
-    SERVED = 'SERVED',
+    ABORTED   = 'ABORTED',
+    SERVED    = 'SERVED',
 }
 
 export interface ProductOrdered {
@@ -29,7 +29,7 @@ export interface Order {
     clients: number;
     table: number;
     waiter: Types.ObjectId | string;
-    foods: ProductOrdered[] | CacheProductOrdered[];
+    foods:  ProductOrdered[] | CacheProductOrdered[];
     drinks: ProductOrdered[] | CacheProductOrdered[];
     status: OrderStatus;
     createdAt: Date;
@@ -40,7 +40,7 @@ export interface CacheOrder extends Order {
     checkedFood: boolean;
     checkedDrinks: boolean;
 }
-    
+
 
 const schema = new Schema<Order>(
     {
