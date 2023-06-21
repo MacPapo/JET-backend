@@ -20,6 +20,16 @@ class SocketManager {
                 this.io.emit('bartender-new-order', 'New Order on table n.' + order.table + ' Added!');
             });
 
+            socket.on('cooker-complete-order', (order) => {
+                // SAVE ON REDIS
+                this.io.emit('cooker-complete-order', 'test');
+            });
+
+            socket.on('bartender-complete-order', (order) => {
+                // SAVE ON REDIS
+                this.io.emit('cooker-complete-order', 'test');
+            });
+
             socket.on('error', function (err) {
                 console.log(err);
             });
