@@ -11,27 +11,36 @@ export enum OrderStatus {
     SERVED = 'SERVED',
 }
 
-export interface FoodOrdered {
+export interface ProductOrdered {
     _id: Types.ObjectId;
     quantity: number;
 }
 
-export interface DrinkOrdered {
+export interface CacheProductOrdered {
     _id: Types.ObjectId;
+    name: string;
+    productionTime: number;
     quantity: number;
+    checked: boolean;
 }
 
-export default interface Order {
+export interface Order {
     _id: Types.ObjectId;
     clients: number;
     table: number;
-    waiter: Types.ObjectId;
-    foods?: FoodOrdered[];
-    drinks?: DrinkOrdered[];
+    waiter: Types.ObjectId | string;
+    foods: ProductOrdered[] | CacheProductOrdered[];
+    drinks: ProductOrdered[] | CacheProductOrdered[];
     status: OrderStatus;
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface CacheOrder extends Order {
+    checkedFood: boolean;
+    checkedDrinks: boolean;
+}
+    
 
 const schema = new Schema<Order>(
     {

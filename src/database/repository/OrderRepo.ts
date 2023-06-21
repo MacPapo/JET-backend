@@ -1,8 +1,5 @@
-import Order, { OrderModel } from '../model/Order';
+import { Order, OrderModel } from '../model/Order';
 import { Types } from 'mongoose';
-import Food from '../model/Food';
-import { FoodModel } from '../model/Food';
-import Drink, { DrinkModel } from '../model/Drink';
 
 async function create(order: Order): Promise<Order> {
     const createdOrder = await OrderModel.create(order);

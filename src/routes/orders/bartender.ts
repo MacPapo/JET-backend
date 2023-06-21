@@ -7,6 +7,8 @@ import authentication from '../../auth/authentication';
 import authorization from '../../auth/authorization';
 import OrderRepo from '../../database/repository/OrderRepo';
 import role from '../../helpers/role';
+import { cacheGetOrder } from '../../cache/repository/OrderCache';
+import { Types } from 'mongoose';
 
 const router = express.Router();
 
@@ -23,6 +25,16 @@ router.get(
     asyncHandler(async (req: ProtectedRequest, res) => {
         const orders = await OrderRepo.findAllOrderedDrinks();
         new SuccessResponse('Success', orders).send(res);
+    }),
+);
+
+router.get(
+    '/detail/:id',
+    asyncHandler(async (req: ProtectedRequest, res) => {
+        const order = await cacheGetOrder(
+            new Types.ObjectId(req.params.id)
+        );
+        new SuccessResponse('Success', order).send(res);
     }),
 );
 

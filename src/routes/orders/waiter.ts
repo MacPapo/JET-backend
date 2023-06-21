@@ -1,7 +1,7 @@
 import express from 'express';
 import { SuccessResponse } from '../../core/ApiResponse';
 import { OrderStatus } from '../../database/model/Order';
-import Order from '../../database/model/Order';
+import { Order } from '../../database/model/Order';
 import { BadRequestError } from '../../core/ApiError';
 import { ProtectedRequest } from 'app-request';
 import { RoleCode } from '../../database/model/Role';
@@ -16,6 +16,8 @@ import OrderRepo from '../../database/repository/OrderRepo';
 import UserRepo from '../../database/repository/UserRepo';
 import role from '../../helpers/role';
 import TableRepo from '../../database/repository/TableRepo';
+import { cacheSaveOrder } from '../../cache/repository/OrderCache';
+import { orderToCache } from '../../helpers/cacheData';
 
 const router = express.Router();
 
@@ -63,6 +65,13 @@ router.post(
         table.isAvailable = false;
         const updatedTable = await TableRepo.update(table);
         if (!updatedTable) { throw new BadRequestError('Table could not be updated'); }
+
+        try {
+            // Cache order
+            await cacheSaveOrder(await orderToCache(newOrder));
+        } catch (error) {
+            console.log(error);
+        }
 
         new SuccessResponse('Order created successfully', newOrder).send(res);
     }),

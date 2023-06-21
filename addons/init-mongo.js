@@ -199,12 +199,6 @@ function seed(dbName, user, password) {
 
     db.foods.insertMany([
         {
-            name: 'Hamburger',
-            price: 10,
-            description: 'Hamburger with cheese',
-            productionTime: 10,
-        },
-        {
             name: 'Cheeseburger',
             price: 12,
             description: 'Cheeseburger with cheese',
