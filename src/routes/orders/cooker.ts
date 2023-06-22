@@ -27,7 +27,7 @@ router.use(
 router.get(
     '/',
     asyncHandler(async (req: ProtectedRequest, res) => {
-        const orders = await OrderRepo.findAllOrderedFoods();
+        const orders = await OrderRepo.findAllDetailed();
         new SuccessResponse('Success', orders).send(res);
     }),
 );
