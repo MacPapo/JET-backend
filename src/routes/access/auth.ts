@@ -17,6 +17,6 @@ router.use('/token', token);
 
 // TODO
 router.use('/delete', del);
-router.use('/credential', credential);
+//router.use('/credential', credential);
 
 export default router;

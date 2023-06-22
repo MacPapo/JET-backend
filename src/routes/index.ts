@@ -9,8 +9,11 @@ import drink from './drink';
 import table from './table';
 import order from './orders';
 import bill from './bill';
+import docs from './docs/swagger';
 
 const router = express.Router();
+
+router.use(docs);
 
 /*---------------------------------------------------------*/
 router.use(apikey);

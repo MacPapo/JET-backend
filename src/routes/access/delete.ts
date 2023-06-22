@@ -18,7 +18,25 @@ const router = express.Router();
 router.use(authentication, role(RoleCode.ADMIN), authorization);
 //----------------------------------------------------------------
 
-
+/**
+ * @openapi
+ * /api/auth/delete/user/{id}:
+ *   delete:
+ *     tags:
+ *       - Access
+ *     description: Delete user
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       400:
+ *         description: User does not exist
+ */
 router.delete(
     '/user/:id',
     validator(schema.userId),

@@ -2,6 +2,29 @@ import Joi from 'joi';
 import { JoiAuthBearer, JoiObjectId } from '../../helpers/validator';
 import { RoleCode } from '../../database/model/Role'
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    LoginUser:
+ *     type: object
+ *     required:
+ *      - email
+ *      - password
+ *     properties:
+ *      email:
+ *       type: string
+ *       default: waiter@justeatime.com
+ *       format: email
+ *       description: Email of the user
+ *      password:
+ *       type: string
+ *       default: pass
+ *       format: password
+ *       description: Password of the user
+ *
+ *
+ */
 export default {
     credential: Joi.object().keys({
         email: Joi.string().required().email(),
@@ -22,7 +45,7 @@ export default {
         password: Joi.string().required().min(6),
         roles: Joi.array().items(Joi.string().valid(...Object.values(RoleCode))).required(),
     }),
-    userId:Joi.object().keys({
+    userId: Joi.object().keys({
         id: JoiObjectId().required(),
     }),
     update: Joi.object().keys({

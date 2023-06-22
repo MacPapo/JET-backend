@@ -14,6 +14,21 @@ import { PublicRequest } from '../../types/app-request';
 
 const router = express.Router();
 
+/**
+ * @openapi
+ * /api/auth/login:
+ *  post:
+ *   tags:
+ *   - Access
+ *   description: Login user
+ *   requestBody:
+ *     required: true
+ *     contents:
+ *       application/json:
+ *         schema:
+ *           $ref: '#/components/schemas/LoginUser'
+ *
+ * */
 router.post(
   '/',
   validator(schema.credential),

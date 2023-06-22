@@ -4,6 +4,7 @@ import cors from 'cors';
 import { corsUrl, environment } from './config';
 import './database'; // initialize database
 import './cache'; // initialize cache
+
 import {
   NotFoundError,
   ApiError,
