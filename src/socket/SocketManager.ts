@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import { updateOrder } from "../cache/repository/OrderCache";
 import { sockerPort } from '../config';
 
 class SocketManager {
@@ -12,18 +13,30 @@ class SocketManager {
         this.io.on('connection', (socket) => {
             console.log('New connection: ' + socket.id);
 
-            socket.on('cooker-new-order', (order) => {
-                this.io.emit('cooker-new-order', 'New Order on table n.' + order.table + ' Added!');
-            });
+            socket.on(
+                'cooker-new-order',
+                (order) => { this.io.emit('cooker-new-order', 'New Order on table n.' + order.table + ' Added!'); }
+            );
 
-            socket.on('bartender-new-order', (order) => {
-                this.io.emit('bartender-new-order', 'New Order on table n.' + order.table + ' Added!');
-            });
+            socket.on(
+                'bartender-new-order',
+                (order) => { this.io.emit('bartender-new-order', 'New Order on table n.' + order.table + ' Added!'); }
+            );
 
-            socket.on('cooker-complete-order', (order) => {
-                // SAVE ON REDIS
-                this.io.emit('cooker-complete-order', 'test');
-            });
+            socket.on(
+                'cooker-complete-order',
+                (order) => {
+
+                    try {
+                        // SAVE ON REDIS
+                        updateOrder(order);
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                    this.io.emit('cooker-complete-order', 'test');
+                }
+            );
 
             socket.on('bartender-complete-order', (order) => {
                 // SAVE ON REDIS

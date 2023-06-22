@@ -1,6 +1,7 @@
 import { CacheOrder, Order, OrderModel } from '../model/Order';
 import { Types } from 'mongoose';
-import { cacheGetAllOrders } from '../../cache/repository/OrderCache';
+import { cacheGetAllOrders, cacheSaveOrder, cacheSaveOrders } from '../../cache/repository/OrderCache';
+import { orderToCache } from '../../helpers/cacheData';
 
 async function create(order: Order): Promise<Order> {
     const createdOrder = await OrderModel.create(order);
@@ -38,39 +39,16 @@ async function findAll(): Promise<Order[]> {
 }
 
 async function findAllDetailed(): Promise<CacheOrder[] | null> {
+    const cacheOrders: CacheOrder[] | null = await cacheGetAllOrders();
+    if (cacheOrders) return cacheOrders;
+
+    const orders: Order[] = await findAll();
+    const cacheData: CacheOrder[] = await Promise.all(
+        orders.map(async (order) => await orderToCache(order))
+    );
+
+    await cacheSaveOrders(cacheData);
     return cacheGetAllOrders();
-}
-
-async function findAllOrderedFoods() {
-    try {
-        const orders = await OrderModel
-            .find({ foods: { $exists: true, $ne: [] } })
-            .select('table waiter foods createdAt updatedAt')
-            .populate('waiter', 'firstName lastName')
-            .populate('foods._id', 'name productionTime')
-            .lean()
-            .exec();
-
-        return orders;
-    } catch (error) {
-        throw new Error('Failed to fetch ordered drinks');
-    }
-}
-
-async function findAllOrderedDrinks() {
-    try {
-        const orders = await OrderModel
-            .find({ drinks: { $exists: true, $ne: [] } })
-            .select('table waiter drinks createdAt updatedAt')
-            .populate('waiter', 'firstName lastName')
-            .populate('drinks._id', 'name productionTime')
-            .lean()
-            .exec();
-
-        return orders;
-    } catch (error) {
-        throw new Error('Failed to fetch ordered drinks');
-    }
 }
 
 export default {
@@ -81,11 +59,6 @@ export default {
     findByTable,
     findOrderById,
 
-    // Cooker
-    findAllOrderedFoods,
-
-    // Bartender
-    findAllOrderedDrinks,
     findAllDetailed,
 
     findAll,

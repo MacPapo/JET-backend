@@ -65,6 +65,15 @@ export async function setList(
     return await multi.exec();
 }
 
+export async function updateList(
+    key: DynamicKeyType,
+    index: number,
+    value: any
+) {
+    return await cache.lSet(key, index, JSON.stringify(value));
+}
+    
+
 export async function addToList(key: DynamicKeyType, value: any) {
     const type = await cache.type(key);
     if (type !== TYPES.LIST) return null;

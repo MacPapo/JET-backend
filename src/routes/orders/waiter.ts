@@ -34,22 +34,30 @@ router.post(
     validator(schema.createOrder),
     asyncHandler(async (req: ProtectedRequest, res) => {
         const table = await TableRepo.findTableIfExists(req.body.table);
-        if (!table) { throw new BadRequestError('Table does not exist'); }
 
-        if (!table.isAvailable || table.seats < req.body.clients) { throw new BadRequestError('Table is not available or not enough seats'); }
-
+        if (!table ||
+            !table.isAvailable ||
+            table.seats < req.body.clients) {
+            throw new BadRequestError('Table is not available or not enough seats');
+        }
+ 
         const order = await OrderRepo.findByTable(req.body.table);
         if (order) { throw new BadRequestError('Order already exists'); }
 
         const waiter = await UserRepo.findWaiterById(req.body.waiter);
         if (!waiter) { throw new BadRequestError('Waiter does not exist'); }
 
-        const drinks = await DrinkRepo.findByIds(req.body.drinks);
+        const drinks = req.body.drinks ? await DrinkRepo.findByIds(req.body.drinks) : [];
         if (drinks.length !== req.body.drinks.length) { throw new BadRequestError('Some drinks do not exist'); }
 
-        const foods = await FoodRepo.findByIds(req.body.foods);
+        const foods = req.body.foods ? await FoodRepo.findByIds(req.body.foods) : [];
         if (foods.length !== req.body.foods.length) { throw new BadRequestError('Some foods do not exist'); }
 
+        if (drinks.length === 0 &&
+            foods.length  === 0) {
+            throw new BadRequestError('Order must have at least one item');
+        }
+        
         const now = new Date();
         const newOrder = await OrderRepo.create({
             clients: req.body.clients,

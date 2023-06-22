@@ -20,6 +20,8 @@ export interface CacheProductOrdered {
     _id: Types.ObjectId;
     name: string;
     productionTime: number;
+    description?: string;
+    price: number;
     quantity: number;
     checked: boolean;
 }
@@ -28,16 +30,25 @@ export interface Order {
     _id: Types.ObjectId;
     clients: number;
     table: number;
-    waiter: Types.ObjectId | string;
-    foods:  ProductOrdered[] | CacheProductOrdered[];
-    drinks: ProductOrdered[] | CacheProductOrdered[];
+    waiter: Types.ObjectId;
+    foods: ProductOrdered[];
+    drinks: ProductOrdered[];
     status: OrderStatus;
     createdAt: Date;
     updatedAt: Date;
 }
 
-export interface CacheOrder extends Order {
-    checkedFood: boolean;
+export interface CacheOrder {
+    _id: Types.ObjectId;
+    clients: number;
+    table: number;
+    waiter: string;
+    foods: CacheProductOrdered[];
+    drinks: CacheProductOrdered[];
+    status: OrderStatus;
+    createdAt: Date;
+    updatedAt: Date;
+    checkedFoods: boolean;
     checkedDrinks: boolean;
 }
 

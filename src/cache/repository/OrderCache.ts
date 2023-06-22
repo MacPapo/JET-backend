@@ -1,4 +1,4 @@
-import { addToList, getJson, getListRange, setList } from '../query';
+import { addToList, getJson, getListRange, setList, updateList } from '../query';
 import { Types } from 'mongoose';
 import { DynamicKey, getDynamicKey } from '../keys';
 import { CacheOrder } from '../../database/model/Order';
@@ -19,6 +19,18 @@ export async function cacheSaveOrders(orders: CacheOrder[]) {
     await setList(getDynamicKey(DynamicKey.ORDER, '*'),
                   orders,
                   expireTomorrow);
+}
+
+export async function updateOrder(order: CacheOrder) {
+    const list = await getListRange<CacheOrder>(getDynamicKey(DynamicKey.ORDER, '*'));
+    if (!list) return;
+
+    const index = list.findIndex((o) => o._id.equals(order._id));
+    if (index === -1) return;
+
+    return await updateList(getDynamicKey(DynamicKey.ORDER, '*'),
+                            index,
+                            order);
 }
 
 export async function cacheGetOrder(id: Types.ObjectId) {
