@@ -14,7 +14,7 @@ export async function keyExists(...keys: string[]) {
 }
 
 export async function setValue(
-    key:  DynamicKeyType,
+    key: DynamicKeyType,
     value: string | number,
     expireAt: Date | null = null,
 ) {
@@ -70,9 +70,9 @@ export async function updateList(
     index: number,
     value: any
 ) {
+    console.log("UPDATE LIST " + key + " " + index + " " + JSON.stringify(value));
     return await cache.lSet(key, index, JSON.stringify(value));
 }
-    
 
 export async function addToList(key: DynamicKeyType, value: any) {
     const type = await cache.type(key);

@@ -70,7 +70,7 @@ router.put(
         if (!updatedOrder) { throw new BadRequestError('Order could not be updated'); }
 
         new SuccessResponse('Order updated successfully', updatedOrder).send(res);
-    }),
+    })
 );
 
 export default router;
