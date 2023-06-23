@@ -18,16 +18,16 @@ class SocketManager {
             if (!orderUpdated) { throw new Error('Order does not exist'); }
 
             orderUpdated.status = OrderStatus.COMPLETED;
-            order.status        = OrderStatus.COMPLETED;
+            order.status = OrderStatus.COMPLETED;
         } else if (
             (Boolean(order.checkedFoods) && !Boolean(order.checkedDrinks) ||
-            !Boolean(order.checkedFoods) && Boolean(order.checkedDrinks) &&
-            order.status !== OrderStatus.COMPLETED)) {
+                !Boolean(order.checkedFoods) && Boolean(order.checkedDrinks) &&
+                order.status !== OrderStatus.COMPLETED)) {
             orderUpdated = await OrderRepo.findOrderById(new Types.ObjectId(order._id));
             if (!orderUpdated) { throw new Error('Order does not exist'); }
 
             orderUpdated.status = OrderStatus.STARTED;
-            order.status        = OrderStatus.STARTED;
+            order.status = OrderStatus.STARTED;
         } else {
             throw new Error('Order status cannot be updated');
         }
@@ -82,7 +82,7 @@ class SocketManager {
                         'New Order on table n.' + order.table + ' Added!');
                 }
             );
-            
+
             socket.on(
                 'cooker-complete-order',
                 (order) => {
@@ -98,7 +98,7 @@ class SocketManager {
 
                     const message = Boolean(order.checkedFoods)
                         ? 'Foods completed on table n.' + order.table
-                        : 'Foods aborted on table n.'   + order.table;
+                        : 'Foods aborted on table n.' + order.table;
                     this.io.emit('waiter-update-order', message);
                 }
             );
@@ -118,8 +118,18 @@ class SocketManager {
 
                     const message = Boolean(order.checkedDrinks)
                         ? 'Drinks completed on table n.' + order.table
-                        : 'Drinks aborted on table n.'   + order.table;
+                        : 'Drinks aborted on table n.' + order.table;
                     this.io.emit('waiter-update-order', message);
+                }
+            );
+
+            socket.on(
+                'waiter-complete-order',
+                (order) => {
+                    order.status = OrderStatus.SERVED;
+                    OrderRepo.update(order);
+                    updateOrder(order);
+                    this.io.emit('waiter-complete-order', 'Order delivered successfully');
                 }
             );
 

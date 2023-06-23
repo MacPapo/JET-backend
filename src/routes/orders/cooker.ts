@@ -46,7 +46,7 @@ router.put(
         const possibleStatus = [
             OrderStatus.PENDING,
             OrderStatus.STARTED,
-            OrderStatus.COMPLETED
+            OrderStatus.COMPLETED,
         ];
 
         if (!possibleStatus.includes(currentStatus)) { throw new BadRequestError('Order status cannot be updated'); }
@@ -64,7 +64,7 @@ router.put(
             default:
                 throw new BadRequestError('Order invalid status');
         }
-        
+
         // UPDATE ORDER WITH NEW STATUS
         const updatedOrder = await OrderRepo.update(order);
         if (!updatedOrder) { throw new BadRequestError('Order could not be updated'); }
