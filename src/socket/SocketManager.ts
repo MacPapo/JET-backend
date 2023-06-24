@@ -3,8 +3,8 @@ import { CacheOrder, Order, OrderStatus } from "../database/model/Order";
 import { updateFoodStatus, updateOrder } from "../cache/repository/OrderCache";
 import { sockerPort } from '../config';
 import OrderRepo from "../database/repository/OrderRepo";
-import { Types } from "mongoose";
 import TableRepo from "../database/repository/TableRepo";
+import { Types } from "mongoose";
 
 class SocketManager {
     private static instance: SocketManager;
@@ -40,6 +40,13 @@ class SocketManager {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    private async freeTable(number: number): Promise<void> {
+        const table = await TableRepo.findTableIfExists(number);
+        if (!table) { throw new Error('Table does not exist'); }
+        table.isAvailable = true;
+        await TableRepo.update(table);
     }
 
     handleConnection() {
@@ -127,16 +134,10 @@ class SocketManager {
             socket.on(
                 'waiter-complete-order',
                 (order) => {
-
-                    try {
-                        order.status = OrderStatus.SERVED;
-                        OrderRepo.update(order);
-                        TableRepo.updateTableStatus(order.table, true);
-                        updateOrder(order);
-                    } catch (error) {
-                        console.log(error);
-                    }
-                    
+                    order.status = OrderStatus.SERVED;
+                    OrderRepo.update(order);
+                    this.freeTable(order.table);
+                    updateOrder(order);
                     this.io.emit('waiter-complete-order', 'Order delivered successfully');
                 }
             );
