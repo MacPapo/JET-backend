@@ -133,6 +133,13 @@ class SocketManager {
                 }
             );
 
+            socket.on(
+                'cashier-bill-available',
+                (message) => {
+                    this.io.emit('cashier-bill-available', message);
+                }
+            );
+
             socket.on('error', function (err) {
                 console.log(err);
             });
