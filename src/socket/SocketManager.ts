@@ -4,6 +4,7 @@ import { updateFoodStatus, updateOrder } from "../cache/repository/OrderCache";
 import { sockerPort } from '../config';
 import OrderRepo from "../database/repository/OrderRepo";
 import { Types } from "mongoose";
+import TableRepo from "../database/repository/TableRepo";
 
 class SocketManager {
     private static instance: SocketManager;
@@ -126,9 +127,16 @@ class SocketManager {
             socket.on(
                 'waiter-complete-order',
                 (order) => {
-                    order.status = OrderStatus.SERVED;
-                    OrderRepo.update(order);
-                    updateOrder(order);
+
+                    try {
+                        order.status = OrderStatus.SERVED;
+                        OrderRepo.update(order);
+                        TableRepo.updateTableStatus(order.table, true);
+                        updateOrder(order);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                    
                     this.io.emit('waiter-complete-order', 'Order delivered successfully');
                 }
             );

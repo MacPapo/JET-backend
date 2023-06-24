@@ -6,12 +6,24 @@ async function create(table: Table): Promise<Table> {
     return createdTable.toObject();
 }
 
-// TODO: fix Duplicate Key error
 async function update(table: Table): Promise<Table | null> {
     return TableModel.findByIdAndUpdate(table._id, table, { new: true })
         .lean()
         .exec();
 }
+
+// TODO: fix Duplicate Key error
+async function updateTableStatus(id: Types.ObjectId, status: boolean) {
+    let table: Table = await this.TableRepo.findTableById(id);
+    if (!table) { throw new Error('Table does not exist'); }
+
+    table.isAvailable = status;
+    TableModel
+        .update(table)
+        .lean()
+        .exec();
+}
+
 
 async function hasSameNumber(number: number): Promise<Boolean> {
     return await findTableIfExists(number) != null ? true : false;
@@ -48,5 +60,6 @@ export default {
     findTableIfExists,
     findTableById,
     findAll,
-    deleteTable
+    deleteTable,
+    updateTableStatus
 };

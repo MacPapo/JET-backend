@@ -18,7 +18,7 @@ const router = express.Router();
 /*-------------------------------------------------------------------------*/
 router.use(
     authentication,
-    role(RoleCode.WAITER, RoleCode.ADMIN, RoleCode.COOKER),
+    role(RoleCode.WAITER, RoleCode.ADMIN, RoleCode.CASHIER),
     authorization,
 );
 /*-------------------------------------------------------------------------*/

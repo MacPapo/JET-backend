@@ -15,4 +15,7 @@ export default {
         seats: Joi.number().optional().min(1),
         isAvailable: Joi.boolean().optional(),
     }),
+    updateStatus: Joi.object().keys({
+        isAvailable: Joi.boolean().required(),
+    }),
 };
