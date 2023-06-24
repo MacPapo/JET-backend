@@ -43,10 +43,11 @@ async function findAllDetailed(): Promise<CacheOrder[] | null> {
     if (cacheOrders) return cacheOrders;
 
     const orders: Order[] = await findAll();
+    if (orders.length === 0) return [];
+
     const cacheData: CacheOrder[] = await Promise.all(
         orders.map(async (order) => await orderToCache(order))
     );
-
     await cacheSaveOrders(cacheData);
     return cacheGetAllOrders();
 }

@@ -55,13 +55,15 @@ export async function setList(
     expireAt: Date | null = null,
 ) {
     const multi = cache.multi();
-    const values: any[] = []
-    for (const i in list) {
-        values[i] = JSON.stringify(list[i]);
+    if (list && list.length > 0) {
+        const values: any[] = []
+        for (const i in list) {
+            values[i] = JSON.stringify(list[i]);
+        }
+        multi.del(key);
+        multi.rPush(key, values);
+        if (expireAt) multi.pExpireAt(key, expireAt.getTime());
     }
-    multi.del(key);
-    multi.rPush(key, values);
-    if (expireAt) multi.pExpireAt(key, expireAt.getTime());
     return await multi.exec();
 }
 
