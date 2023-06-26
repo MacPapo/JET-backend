@@ -1,7 +1,12 @@
-import app from './init_app';
-import router from './routes/routes';
-import auth_router from './routes/auth.routes';
-import AuthHandler from './common/utils/auth.handler';
+import Logger from './core/Logger';
+import { port } from './config';
+import app from './app';
+import SocketManager from './socket/SocketManager';
 
-app.use('/api/auth', auth_router);
-app.use('/api', AuthHandler.authenticate, router);
+app
+  .listen(port, () => {
+    Logger.info(`server running on port : ${port}`);
+  })
+  .on('error', (e) => Logger.error(e));
+
+SocketManager.handleConnection();
