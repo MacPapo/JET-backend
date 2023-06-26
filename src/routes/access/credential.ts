@@ -19,9 +19,8 @@ import { SuccessResponse, SuccessMsgResponse } from '../../core/ApiResponse';
 
 const router = express.Router();
 
-//----------------------------------------------------------------
+
 router.use(authentication, role(RoleCode.ADMIN), authorization);
-//----------------------------------------------------------------
 
 router.post(
   '/user/assign',

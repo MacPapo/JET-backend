@@ -14,9 +14,11 @@ import { SuccessMsgResponse } from '../../core/ApiResponse';
 
 const router = express.Router();
 
-//----------------------------------------------------------------
-router.use(authentication, role(RoleCode.ADMIN), authorization);
-//----------------------------------------------------------------
+router.use(
+    authentication,
+    role(RoleCode.ADMIN), // Only admin can update users
+    authorization
+);
 
 router.put(
     '/:id',

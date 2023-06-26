@@ -14,10 +14,12 @@ import { SuccessMsgResponse } from '../../core/ApiResponse';
 
 const router = express.Router();
 
-//----------------------------------------------------------------
-router.use(authentication, role(RoleCode.ADMIN), authorization);
-//----------------------------------------------------------------
 
+router.use(
+    authentication,
+    role(RoleCode.ADMIN), // Only admin can delete users
+    authorization
+);
 
 router.delete(
     '/user/:id',

@@ -1,7 +1,7 @@
 import express from 'express';
 import { SuccessResponse, SuccessMsgResponse } from '../../core/ApiResponse';
 import { ProtectedRequest } from 'app-request';
-import { BadRequestError, ForbiddenError } from '../../core/ApiError';
+import { BadRequestError } from '../../core/ApiError';
 import { RoleCode } from '../../database/model/Role';
 import { Types } from 'mongoose';
 import validator, { ValidationSource } from '../../helpers/validator';
@@ -15,13 +15,12 @@ import schema from './schema';
 
 const router = express.Router();
 
-/*-------------------------------------------------------------------------*/
+// All API of this router is protected and available only for logged in users with admin role
 router.use(
     authentication,
     role(RoleCode.ADMIN),
     authorization,
 );
-/*-------------------------------------------------------------------------*/
 
 router.post(
     '/',

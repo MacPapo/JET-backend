@@ -10,13 +10,12 @@ import role from '../../helpers/role';
 
 const router = express.Router();
 
-/*-------------------------------------------------------------------------*/
+// FIXME
 router.use(
     authentication,
     role(RoleCode.WAITER, RoleCode.ADMIN, RoleCode.COOKER),
     authorization,
 );
-/*-------------------------------------------------------------------------*/
 
 router.get(
     '/',

@@ -15,13 +15,12 @@ import schema from './schema';
 
 const router = express.Router();
 
-/*-------------------------------------------------------------------------*/
+// All API of this router is protected and available only for logged in users with admin role
 router.use(
     authentication,
     role(RoleCode.ADMIN),
     authorization,
 );
-/*-------------------------------------------------------------------------*/
 
 router.post(
     '/',

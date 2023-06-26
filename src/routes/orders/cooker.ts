@@ -16,13 +16,12 @@ import { OrderStatus } from '../../database/model/Order';
 
 const router = express.Router();
 
-/*-------------------------------------------------------------------------*/
+// All API of this router is protected and available only for logged in users with cooker role
 router.use(
     authentication,
     role(RoleCode.COOKER),
     authorization,
 );
-/*-------------------------------------------------------------------------*/
 
 router.get(
     '/',

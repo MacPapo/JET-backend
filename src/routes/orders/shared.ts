@@ -19,7 +19,7 @@ import TableRepo from '../../database/repository/TableRepo';
 
 const router = express.Router();
 
-/*-------------------------------------------------------------------------*/
+// Shared APIs for waiter, admin, cashier
 router.use(
     authentication,
     role(
@@ -29,7 +29,6 @@ router.use(
     ),
     authorization,
 );
-/*-------------------------------------------------------------------------*/
 
 router.get(
     '/',

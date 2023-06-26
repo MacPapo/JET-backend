@@ -12,29 +12,18 @@ import { Types } from 'mongoose';
 
 const router = express.Router();
 
-/*-------------------------------------------------------------------------*/
+// All API of this router is protected and available only for logged in users with bartender role
 router.use(
     authentication,
     role(RoleCode.BARTENDER),
     authorization,
 );
-/*-------------------------------------------------------------------------*/
 
 router.get(
     '/',
     asyncHandler(async (req: ProtectedRequest, res) => {
         const orders = await OrderRepo.findAllDetailed();
         new SuccessResponse('Success', orders).send(res);
-    }),
-);
-
-router.get(
-    '/detail/:id',
-    asyncHandler(async (req: ProtectedRequest, res) => {
-        const order = await cacheGetOrder(
-            new Types.ObjectId(req.params.id)
-        );
-        new SuccessResponse('Success', order).send(res);
     }),
 );
 

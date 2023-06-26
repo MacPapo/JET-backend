@@ -12,12 +12,11 @@ import bill from './bill';
 
 const router = express.Router();
 
-/*---------------------------------------------------------*/
+// All APIs are protected through api key
 router.use(apikey);
-/*---------------------------------------------------------*/
-/*---------------------------------------------------------*/
+
+// All APIs are protected through permission based access
 router.use(permission(Permission.GENERAL));
-/*---------------------------------------------------------*/
 
 router.use('/auth', auth);
 router.use('/foods', food);

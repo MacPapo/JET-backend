@@ -7,9 +7,8 @@ import authentication from '../../auth/authentication';
 
 const router = express.Router();
 
-/*-------------------------------------------------------------------------*/
+// All API of this router is protected and available only for logged in users
 router.use(authentication);
-/*-------------------------------------------------------------------------*/
 
 router.delete(
   '/',

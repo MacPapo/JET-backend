@@ -21,13 +21,12 @@ import { orderToCache } from '../../helpers/cacheData';
 
 const router = express.Router();
 
-/*-------------------------------------------------------------------------*/
+// All APIs of this router are protected and available only for logged in users with waiter role
 router.use(
     authentication,
     role(RoleCode.WAITER),
     authorization,
 );
-/*-------------------------------------------------------------------------*/
 
 router.post(
     '/',

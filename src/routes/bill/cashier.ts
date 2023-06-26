@@ -12,13 +12,12 @@ import schema from './schema';
 
 const router = express.Router();
 
-/*-------------------------------------------------------------------------*/
+// All API of this router is protected and available only for logged in users with cashier role
 router.use(
     authentication,
-    role(RoleCode.CASHIER),
+    role(RoleCode.CASHIER), 
     authorization,
 );
-/*-------------------------------------------------------------------------*/
 
 router.get(
     '/',

@@ -15,13 +15,11 @@ import schema from './schema';
 
 const router = express.Router();
 
-/*-------------------------------------------------------------------------*/
 router.use(
     authentication,
-    role(RoleCode.ADMIN),
+    role(RoleCode.ADMIN), // Only admin can create, update or delete foods
     authorization,
 );
-/*-------------------------------------------------------------------------*/
 
 router.post(
     '/',

@@ -16,7 +16,7 @@ function seed(dbName, user, password) {
     db.api_keys.insert({
         key: 'GCMUDiuY5a7WvyUNt9n3QztToSHzK7Uj',
         permissions: ['GENERAL'],
-        comments: ['To be used by the xyz vendor'],
+        comments: ['To be used by the justeatime vendor'],
         version: 1,
         status: true,
         createdAt: new Date(),
@@ -221,7 +221,31 @@ function seed(dbName, user, password) {
             price: 5,
             description: 'Onion Rings with cheese',
             productionTime: 10,
-        }
+        },
+        {
+            name: 'Chicken Wings',
+            price: 10,
+            description: 'Chicken Wings with cheese',
+            productionTime: 10,
+        },
+        {
+            name: 'Chicken Nuggets',
+            price: 10,
+            description: 'Chicken Nuggets with cheese',
+            productionTime: 10,
+        },
+        {
+            name: 'Chicken Burger',
+            price: 10,
+            description: 'Chicken Burger with cheese',
+            productionTime: 10,
+        },
+        {
+            name: 'Chicken Sandwich',
+            price: 10,
+            description: 'Chicken Sandwich with cheese',
+            productionTime: 10,
+        },
     ]);
 
     db.drinks.insertMany([
@@ -254,6 +278,12 @@ function seed(dbName, user, password) {
             name: 'Beer',
             price: 5,
             description: 'Beer',
+            productionTime: 3,
+        },
+        {
+            name: 'Wine',
+            price: 5,
+            description: 'Wine',
             productionTime: 3,
         }
     ]);
