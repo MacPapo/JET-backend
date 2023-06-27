@@ -149,6 +149,13 @@ class SocketManager {
                 }
             );
 
+            socket.on(
+                'new-bill',
+                (message) => {
+                    this.io.emit('new-bill', message);
+                }
+            );
+
             socket.on('error', function (err) {
                 console.log(err);
             });
